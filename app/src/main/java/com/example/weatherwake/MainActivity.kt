@@ -1,20 +1,23 @@
 package com.example.weatherwake
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.drawable.Drawable
 import android.location.Location
 import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.os.Bundle
-import android.os.Handler
 import android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
-import android.util.JsonReader
 import android.view.Menu
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -26,21 +29,18 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.weatherwake.APIs.WeatherAPI
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
-import org.json.JSONObject
-import java.io.InputStreamReader
-import java.lang.System.`in`
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
-    //location variables
+    //location variable
     var locManager: LocationManager? = null
-
 
     //for the API attempt
     val weatherInfo: WeatherAPI = WeatherAPI()
@@ -58,8 +58,8 @@ class MainActivity : AppCompatActivity() {
 
         val fab: FloatingActionButton = findViewById(R.id.fab)
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+            val toAlarmMaker: Intent = Intent(applicationContext,AlarmMaker::class.java)
+            startActivity(toAlarmMaker)
         }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
@@ -75,32 +75,36 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        //delay
-        Handler().postDelayed({
-            onStart()
-        }, 4100)
 
+        //delay to give time for Weather API to get information. Delays main thread until info comes in.
+        while (!weatherInfo.isLocationExecuted()){
+            Thread.sleep(500)
+            print("UPDATES??  "+weatherInfo.isLocationExecuted())
+        }
 
 
     }//end of onCreate ends
 
-    //start method... where the program stats
+    //start method... where the program starts
+    @SuppressLint("SetTextI18n")
     override fun onStart() {
         super.onStart()
 
-        val data: JSONObject? = weatherInfo.getCurrentWeather()
-        println("MAIN DATA   "+data)
+        println("CURRENT WEATHER  " + weatherInfo.getCurrentTemp("temp", 'f'))
+        var a: Drawable? = weatherInfo.getWeatherIcon()
 
-        //get current weather descriptions
-        val string:String = data.toString()
-        val reader: JSONObject? = data
-
-
-        //start here tomorrow
-
-
-
-
+        if (findViewById<ImageView>(R.id.weather_icon) != null) {
+            val weather_icon: ImageView = findViewById(R.id.weather_icon)
+            weather_icon.setImageDrawable(a)
+        }
+        if (findViewById<TextView>(R.id.weather_main) != null && findViewById<TextView>(R.id.weather_main_description) != null) {
+            val weather_main_text: TextView = findViewById(R.id.weather_main)
+            val weather_description_text: TextView = findViewById(R.id.weather_main_description)
+            weather_main_text.setText(
+                weatherInfo.getWeather("main") + ",  " + weatherInfo.getCurrentTemp("temp",'f') + "°F")
+            val desc: String = titleCase(weatherInfo.getWeather("description").toString())
+            weather_description_text.setText(desc)
+        }
 
     }//end of onStart method
 
@@ -115,7 +119,6 @@ class MainActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.main, menu)
         return true
     }
-
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
@@ -192,11 +195,18 @@ class MainActivity : AppCompatActivity() {
         if (checkPermissions()) {
             if (isLocationEnabled()) {
                 //checking permissions to use the location (not sure why needed since we check permissions earlier
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                if (ActivityCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    ) == PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    ) == PackageManager.PERMISSION_GRANTED
                 ) {
 
-                    val location: Location? = locManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                    val location: Location? =
+                        locManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
                     if (location != null) {
                         return doubleArrayOf(location.latitude, location.longitude)
                     }
@@ -261,6 +271,15 @@ class MainActivity : AppCompatActivity() {
             })
 //            myAlert.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
         myAlert.show()
+    }
+
+    public fun titleCase(s: String): String {
+        val listArr: List<String> = s.split(" ")
+        for (word in listArr) {
+            word[0].toUpperCase()
+        }
+        val newString: String = listArr.joinToString(" ")
+        return newString
     }
 
 
