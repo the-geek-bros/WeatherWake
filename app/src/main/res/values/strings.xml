@@ -13,4 +13,8 @@
     <string name="menu_tools">Tools</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
+
+    //direct text
+    <string name="newAlarmText">New Alarm</string>
+
 </resources>

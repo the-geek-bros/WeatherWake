@@ -87,11 +87,11 @@ public class WeatherAPI : AsyncTask<Void, Void, String>() {
     public fun executeWeather(lat: Double, lon: Double): Unit {
         locationExecuted = false
 
-        val lat_cburg: Double = 39.2387
-        val lon_cburg: Double = 77.2794
+        val lat_st: Double = 59.9311
+        val lon_st: Double = 30.3609
 
-        loc.set(0, round(lat_cburg,4))
-        loc.set(1, round(lon_cburg,4))
+        loc.set(0, lat_st)
+        loc.set(1, lon_st)
         execute()
     }
 
@@ -99,9 +99,6 @@ public class WeatherAPI : AsyncTask<Void, Void, String>() {
         val appid: String = "37a38145e9f4f2f63769c4998a86ca71"
         val urlString: String =
             "https://api.openweathermap.org/data/2.5/weather?lat=" + loc.get(0) + "&lon=" + loc.get(1) + "&appid=" + appid
-
-        println("URL WEATHER   "+urlString)
-
         val url: URL = URL(urlString)
         val data: String
         val connection = url.openConnection() as HttpURLConnection

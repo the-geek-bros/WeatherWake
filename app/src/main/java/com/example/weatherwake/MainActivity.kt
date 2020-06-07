@@ -15,12 +15,16 @@ import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
+import android.view.LayoutInflater
 import android.view.Menu
+import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -47,16 +51,18 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        setContentView(R.layout.activity_main)
+
         locManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         val locArray: DoubleArray = getLastLocation()
         weatherInfo.executeWeather(locArray[0], locArray[1])
 
-        setContentView(R.layout.activity_main)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val fab: FloatingActionButton = findViewById(R.id.fab)
+        val fab: FloatingActionButton = findViewById(R.id.new_alarm_button)
         fab.setOnClickListener { view ->
             val toAlarmMaker: Intent = Intent(applicationContext,AlarmMaker::class.java)
             startActivity(toAlarmMaker)
@@ -64,23 +70,24 @@ class MainActivity : AppCompatActivity() {
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
-                R.id.nav_tools, R.id.nav_share, R.id.nav_send
+                R.id.nav_tools
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-
         //delay to give time for Weather API to get information. Delays main thread until info comes in.
         while (!weatherInfo.isLocationExecuted()){
             Thread.sleep(500)
-            print("UPDATES??  "+weatherInfo.isLocationExecuted())
+            println("UPDATES??  "+weatherInfo.isLocationExecuted())
         }
+        Thread.sleep(500)
 
 
     }//end of onCreate ends
@@ -91,20 +98,6 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
 
         println("CURRENT WEATHER  " + weatherInfo.getCurrentTemp("temp", 'f'))
-        var a: Drawable? = weatherInfo.getWeatherIcon()
-
-        if (findViewById<ImageView>(R.id.weather_icon) != null) {
-            val weather_icon: ImageView = findViewById(R.id.weather_icon)
-            weather_icon.setImageDrawable(a)
-        }
-        if (findViewById<TextView>(R.id.weather_main) != null && findViewById<TextView>(R.id.weather_main_description) != null) {
-            val weather_main_text: TextView = findViewById(R.id.weather_main)
-            val weather_description_text: TextView = findViewById(R.id.weather_main_description)
-            weather_main_text.setText(
-                weatherInfo.getWeather("main") + ",  " + weatherInfo.getCurrentTemp("temp",'f') + "°F")
-            val desc: String = titleCase(weatherInfo.getWeather("description").toString())
-            weather_description_text.setText(desc)
-        }
 
     }//end of onStart method
 
@@ -117,6 +110,23 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
+
+        //add drawing to the menu header
+        var a: Drawable? = weatherInfo.getWeatherIcon()
+        if (findViewById<ImageView>(R.id.weather_icon) != null) {
+            val weather_icon: ImageView = findViewById(R.id.weather_icon)
+            weather_icon.setImageDrawable(a)
+        }
+        //add the text and the description to the menu header
+        if (findViewById<TextView>(R.id.weather_main) != null && findViewById<TextView>(R.id.weather_main_description) != null) {
+            val weather_main_text: TextView = findViewById(R.id.weather_main)
+            val weather_description_text: TextView = findViewById(R.id.weather_main_description)
+            weather_main_text.setText(
+                weatherInfo.getWeather("main") + ",  " + weatherInfo.getCurrentTemp("temp",'f') + "°F")
+            val desc: String = titleCase(weatherInfo.getWeather("description").toString())
+            weather_description_text.setText(desc)
+        }
+
         return true
     }
     override fun onSupportNavigateUp(): Boolean {
