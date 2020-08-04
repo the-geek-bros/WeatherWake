@@ -15,8 +15,8 @@ private var locationExecuted: Boolean = false
 
 //data that will be collected
 ////for current weather
-private lateinit var current_main: String
-private lateinit var current_description: String
+private var current_main: String = "Did not load"
+private var current_description: String = "Did not load"
 private lateinit var current_icon_url: String
 private var icon_image: Drawable? = null
 
@@ -34,7 +34,9 @@ public class WeatherAPI : AsyncTask<Void, Void, String>() {
         loc = DoubleArray(2)
     }
 ////////////////////////////////////////////////////////////
-    /*returns data functions*/
+    /*Returns data functions*/
+
+    /*Below are the Return Data Functions for all weather possibilities*/
 
     //get current temperature info..temp,feels_like,temp_min,temp_max
     // temp system ,c or f
@@ -45,7 +47,6 @@ public class WeatherAPI : AsyncTask<Void, Void, String>() {
         }
         return Double.MIN_VALUE
     }
-
     //get main descriptions (main or description)
     public fun getWeather(info: String): String {
         when (info) {

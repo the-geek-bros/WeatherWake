@@ -34,19 +34,21 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.weatherwake.APIs.WeatherAPI
+import com.example.weatherwake.Threads.SpinnerThread
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-
     //location variable
     var locManager: LocationManager? = null
 
-    //for the API attempt
+    //thread test
+    val st: Thread = Thread(SpinnerThread())
+
+    //Weather API ... weatherInfo
     val weatherInfo: WeatherAPI = WeatherAPI()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,7 +66,7 @@ class MainActivity : AppCompatActivity() {
 
         val fab: FloatingActionButton = findViewById(R.id.new_alarm_button)
         fab.setOnClickListener { view ->
-            val toAlarmMaker: Intent = Intent(applicationContext,AlarmMaker::class.java)
+            val toAlarmMaker: Intent = Intent(applicationContext, AlarmMaker::class.java)
             startActivity(toAlarmMaker)
         }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
@@ -82,13 +84,7 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        //delay to give time for Weather API to get information. Delays main thread until info comes in.
-        while (!weatherInfo.isLocationExecuted()){
-            Thread.sleep(500)
-            println("UPDATES??  "+weatherInfo.isLocationExecuted())
-        }
-        Thread.sleep(500)
-
+//        st.start() //start the spinning thread
 
     }//end of onCreate ends
 
@@ -107,28 +103,32 @@ class MainActivity : AppCompatActivity() {
     }//end of onResume
 
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
+        if (weatherInfo.isLocationExecuted() == false) {
+        } else {
+            //if the weather icon is rotating,stop is from doing so
+//            if (st.isAlive) {
+//                st.interrupt()
+//            }
+            val weatherMain: TextView = findViewById(R.id.weather_main)
+            val weatherDesc: TextView = findViewById(R.id.weather_main_description)
+            val iconIV: ImageView = findViewById(R.id.weather_icon)
 
-        //add drawing to the menu header
-        var a: Drawable? = weatherInfo.getWeatherIcon()
-        if (findViewById<ImageView>(R.id.weather_icon) != null) {
-            val weather_icon: ImageView = findViewById(R.id.weather_icon)
-            weather_icon.setImageDrawable(a)
+            weatherMain.setText(
+                weatherInfo.getWeather("main") + weatherInfo.getCurrentTemp(
+                    "temp",
+                    'f'
+                ) + "°F"
+            )
+            weatherDesc.setText(weatherInfo.getWeather("description"))
+            iconIV.setImageDrawable(weatherInfo.getWeatherIcon())
         }
-        //add the text and the description to the menu header
-        if (findViewById<TextView>(R.id.weather_main) != null && findViewById<TextView>(R.id.weather_main_description) != null) {
-            val weather_main_text: TextView = findViewById(R.id.weather_main)
-            val weather_description_text: TextView = findViewById(R.id.weather_main_description)
-            weather_main_text.setText(
-                weatherInfo.getWeather("main") + ",  " + weatherInfo.getCurrentTemp("temp",'f') + "°F")
-            val desc: String = titleCase(weatherInfo.getWeather("description").toString())
-            weather_description_text.setText(desc)
-        }
-
         return true
     }
+
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
@@ -204,7 +204,7 @@ class MainActivity : AppCompatActivity() {
     fun getLastLocation(): DoubleArray {
         if (checkPermissions()) {
             if (isLocationEnabled()) {
-                //checking permissions to use the location (not sure why needed since we check permissions earlier
+                //checking permissions to use the location (not sure why needed since we check permissions earlier)
                 if (ActivityCompat.checkSelfPermission(
                         this,
                         Manifest.permission.ACCESS_FINE_LOCATION
@@ -291,6 +291,5 @@ class MainActivity : AppCompatActivity() {
         val newString: String = listArr.joinToString(" ")
         return newString
     }
-
 
 }
