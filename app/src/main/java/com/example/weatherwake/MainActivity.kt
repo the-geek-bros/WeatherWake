@@ -9,6 +9,8 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Matrix
 import android.graphics.drawable.Drawable
 import android.location.Location
 import android.location.LocationManager
@@ -27,6 +29,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.drawToBitmap
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -42,28 +45,35 @@ import com.google.android.material.navigation.NavigationView
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
+
     //location variable
     var locManager: LocationManager? = null
 
-    //thread test
-    val st: Thread = Thread(SpinnerThread())
-
     //Weather API ... weatherInfo
     val weatherInfo: WeatherAPI = WeatherAPI()
+
+    //Spinner Thread (test)
+    val st = Thread(SpinnerThread(this))
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
 
+
+
+        //location manager
         locManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
+        //array gets lat and long of phone
         val locArray: DoubleArray = getLastLocation()
         weatherInfo.executeWeather(locArray[0], locArray[1])
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
+        //button to go to the alarm page (might change later so it doesnt go to a new page)
         val fab: FloatingActionButton = findViewById(R.id.new_alarm_button)
         fab.setOnClickListener { view ->
             val toAlarmMaker: Intent = Intent(applicationContext, AlarmMaker::class.java)
@@ -84,14 +94,19 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-//        st.start() //start the spinning thread
 
     }//end of onCreate ends
 
     //start method... where the program starts
-    @SuppressLint("SetTextI18n")
     override fun onStart() {
         super.onStart()
+
+        while (!weatherInfo.isLocationExecuted());
+        println("WEATHER FOUND")
+
+        st.interrupt()
+
+
 
         println("CURRENT WEATHER  " + weatherInfo.getCurrentTemp("temp", 'f'))
 
@@ -107,25 +122,28 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
-        if (weatherInfo.isLocationExecuted() == false) {
-        } else {
-            //if the weather icon is rotating,stop is from doing so
-//            if (st.isAlive) {
-//                st.interrupt()
-//            }
-            val weatherMain: TextView = findViewById(R.id.weather_main)
-            val weatherDesc: TextView = findViewById(R.id.weather_main_description)
-            val iconIV: ImageView = findViewById(R.id.weather_icon)
 
-            weatherMain.setText(
-                weatherInfo.getWeather("main") + weatherInfo.getCurrentTemp(
-                    "temp",
-                    'f'
-                ) + "°F"
-            )
-            weatherDesc.setText(weatherInfo.getWeather("description"))
-            iconIV.setImageDrawable(weatherInfo.getWeatherIcon())
-        }
+        st.start()
+
+
+
+//        val weatherMain: TextView = findViewById(R.id.weather_main)
+//        val weatherDesc: TextView = findViewById(R.id.weather_main_description)
+//        val iconIV: ImageView = findViewById(R.id.weather_icon)
+//        val currentLocation: TextView = findViewById(R.id.currentLocation)
+//
+//
+//
+//        weatherMain.setText(
+//            weatherInfo.getWeather("main") +" "+ weatherInfo.getCurrentTemp(
+//                "temp",
+//                'f'
+//            ) + "°F"
+//        )
+//        weatherDesc.setText(weatherInfo.getWeather("description"))
+//        currentLocation.setText(weatherInfo.getCity())
+//        iconIV.setImageDrawable(weatherInfo.getWeatherIcon())
+
         return true
     }
 
@@ -179,18 +197,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     //point at which user Allow or Deny our requested permissions
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        if (requestCode == PERMISSION_ID)
-            if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Location has been allowed", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "PERMISSION NOT GRANTED", Toast.LENGTH_SHORT).show()
-            }
-    }
+//    override fun onRequestPermissionsResult(
+//        requestCode: Int,
+//        permissions: Array<out String>,
+//        grantResults: IntArray
+//    ) {
+//        if (requestCode == PERMISSION_ID)
+//            if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                Toast.makeText(this, "Location has been allowed", Toast.LENGTH_SHORT).show()
+//            } else {
+//                Toast.makeText(this, "PERMISSION NOT GRANTED", Toast.LENGTH_SHORT).show()
+//            }
+//    }
 
     //method to see if the user location is enabled...is their location on even though they allowed us to use it
     private fun isLocationEnabled(): Boolean {

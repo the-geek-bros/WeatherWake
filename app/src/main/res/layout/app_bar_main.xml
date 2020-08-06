@@ -31,4 +31,12 @@
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@drawable/new_alarm" />
 
+    <TextView
+        android:id="@+id/currentLocation"
+        android:layout_width="121dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center"
+        android:textSize="20dp"
+         />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

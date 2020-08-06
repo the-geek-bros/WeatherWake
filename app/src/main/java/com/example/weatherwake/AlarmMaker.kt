@@ -26,18 +26,17 @@ class AlarmMaker : AppCompatActivity() {
         //will see here the time and date the user puts
         val calendarView: CalendarView = findViewById<CalendarView>(R.id.calendarView)
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+
         //listener for the cancel button
         val cancel_button: Button = findViewById<Button>(R.id.button_cancel)
         cancel_button.setOnClickListener { view ->
             val back_to_main_intent: Intent = Intent(applicationContext, MainActivity::class.java)
             startActivity(back_to_main_intent)
         }
-
-    }
-
-    override fun onStart() {
-        super.onStart()
-
 
         val save_button: Button = findViewById(R.id.button_save)
         save_button.setOnClickListener { view ->

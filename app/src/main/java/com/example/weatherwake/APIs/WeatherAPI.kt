@@ -27,7 +27,7 @@ private val kelvin_temps: HashMap<String, Double> = HashMap<String, Double>()
 private var current_wind: Double = Double.MIN_VALUE
 
 ///city
-private lateinit var current_city: String
+private var current_city: String = "----"
 
 public class WeatherAPI : AsyncTask<Void, Void, String>() {
     init {
@@ -42,11 +42,12 @@ public class WeatherAPI : AsyncTask<Void, Void, String>() {
     // temp system ,c or f
     public fun getCurrentTemp(info: String, temp_system: Char): Double {
         when (temp_system) {
-            'c' -> return round(kelvin_temps.getOrDefault(info, 0.0) - 273.15,2)
-            'f' -> return round((kelvin_temps.getOrDefault(info, 0.0) - 273.15) * 9 / 5 + 32,2)
+            'c' -> return round(kelvin_temps.getOrDefault(info, 0.0) - 273.15, 2)
+            'f' -> return round((kelvin_temps.getOrDefault(info, 0.0) - 273.15) * 9 / 5 + 32, 2)
         }
         return Double.MIN_VALUE
     }
+
     //get main descriptions (main or description)
     public fun getWeather(info: String): String {
         when (info) {
@@ -59,7 +60,7 @@ public class WeatherAPI : AsyncTask<Void, Void, String>() {
     //get wind (s for meters per second, m for metric kmh, i for imperial mph
     public fun getWindSpeed(temp_system: Char): Double {
         when (temp_system) {
-            's' -> return round(current_wind,3)  //meters per sec
+            's' -> return round(current_wind, 3)  //meters per sec
             'm' -> return current_wind * 3.6 //kmh
             'i' -> return current_wind * 2.237 //mph
         }
@@ -88,8 +89,8 @@ public class WeatherAPI : AsyncTask<Void, Void, String>() {
     public fun executeWeather(lat: Double, lon: Double): Unit {
         locationExecuted = false
 
-        val lat_st: Double = 59.9311
-        val lon_st: Double = 30.3609
+        val lat_st: Double = 40.7128
+        val lon_st: Double = 74.0060
 
         loc.set(0, lat_st)
         loc.set(1, lon_st)
@@ -99,7 +100,9 @@ public class WeatherAPI : AsyncTask<Void, Void, String>() {
     override fun doInBackground(vararg params: Void?): String? {
         val appid: String = "37a38145e9f4f2f63769c4998a86ca71"
         val urlString: String =
-            "https://api.openweathermap.org/data/2.5/weather?lat=" + loc.get(0) + "&lon=" + loc.get(1) + "&appid=" + appid
+            "https://api.openweathermap.org/data/2.5/weather?lat=" + loc.get(0) + "&lon=" + loc.get(
+                1
+            ) + "&appid=" + appid
         val url: URL = URL(urlString)
         val data: String
         val connection = url.openConnection() as HttpURLConnection
@@ -156,7 +159,7 @@ public class WeatherAPI : AsyncTask<Void, Void, String>() {
     //round values
     private fun round(value: Double, after_dot: Int): Double {
         val int_form: Int = (value * after_dot).toInt()
-        return (int_form.toDouble()/after_dot)
+        return (int_form.toDouble() / after_dot)
     }
 
 
