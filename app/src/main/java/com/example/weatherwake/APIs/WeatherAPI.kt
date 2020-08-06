@@ -7,6 +7,8 @@ import java.io.InputStream
 import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.URL
+import java.sql.Time
+import java.util.concurrent.TimeUnit
 import kotlin.collections.HashMap
 
 private var dataJSON: JSONObject? = null
@@ -88,12 +90,8 @@ public class WeatherAPI : AsyncTask<Void, Void, String>() {
     //used to execute weather based on user location
     public fun executeWeather(lat: Double, lon: Double): Unit {
         locationExecuted = false
-
-        val lat_st: Double = 40.7128
-        val lon_st: Double = 74.0060
-
-        loc.set(0, lat_st)
-        loc.set(1, lon_st)
+        loc.set(0, lat)
+        loc.set(1, lon)
         execute()
     }
 

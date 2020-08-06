@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
     var locManager: LocationManager? = null
 
     //Weather API ... weatherInfo
-    val weatherInfo: WeatherAPI = WeatherAPI()
+    var weatherInfo: WeatherAPI = WeatherAPI()
 
     //Spinner Thread (test)
     val st = Thread(SpinnerThread(this))
@@ -61,14 +61,12 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
 
-
-
         //location manager
         locManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-        //array gets lat and long of phone
-        val locArray: DoubleArray = getLastLocation()
-        weatherInfo.executeWeather(locArray[0], locArray[1])
+//        //array gets lat and long of phone
+//        val locArray: DoubleArray = getLastLocation()
+//        weatherInfo.executeWeather(locArray[0], locArray[1])
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -100,13 +98,9 @@ class MainActivity : AppCompatActivity() {
     //start method... where the program starts
     override fun onStart() {
         super.onStart()
-
-        while (!weatherInfo.isLocationExecuted());
-        println("WEATHER FOUND")
-
-        st.interrupt()
-
-
+        //array gets lat and long of phone
+        val locArray: DoubleArray = getLastLocation()
+        weatherInfo.executeWeather(locArray[0], locArray[1])
 
         println("CURRENT WEATHER  " + weatherInfo.getCurrentTemp("temp", 'f'))
 
@@ -123,29 +117,14 @@ class MainActivity : AppCompatActivity() {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
 
+        //start the loading thread. Will stop once weather data is loaded
         st.start()
 
 
-
-//        val weatherMain: TextView = findViewById(R.id.weather_main)
-//        val weatherDesc: TextView = findViewById(R.id.weather_main_description)
-//        val iconIV: ImageView = findViewById(R.id.weather_icon)
-//        val currentLocation: TextView = findViewById(R.id.currentLocation)
-//
-//
-//
-//        weatherMain.setText(
-//            weatherInfo.getWeather("main") +" "+ weatherInfo.getCurrentTemp(
-//                "temp",
-//                'f'
-//            ) + "°F"
-//        )
-//        weatherDesc.setText(weatherInfo.getWeather("description"))
-//        currentLocation.setText(weatherInfo.getCity())
-//        iconIV.setImageDrawable(weatherInfo.getWeatherIcon())
-
         return true
     }
+
+
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)

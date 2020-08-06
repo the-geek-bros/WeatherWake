@@ -13,6 +13,7 @@ import java.io.InputStreamReader
 import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.concurrent.TimeUnit
 
 private var dataJSON: JSONObject? = null
 lateinit var loc: DoubleArray
@@ -34,12 +35,16 @@ public class WeatherAPI : AsyncTask<Void, Void, String>() {
     public fun executeWeather(lat: Double, lon: Double): Unit {
         loc.set(0, lat)
         loc.set(1, lon)
+        TimeUnit.SECONDS.sleep(15)
         execute()
     }
 
-     override fun doInBackground(vararg params: Void?): String? {
+    override fun doInBackground(vararg params: Void?): String? {
         val appid: String = "37a38145e9f4f2f63769c4998a86ca71"
-        val urlString: String = "https://api.openweathermap.org/data/2.5/weather?lat=" + loc.get(0) + "&lon=" + loc.get(1) + "&appid=" + appid
+        val urlString: String =
+            "https://api.openweathermap.org/data/2.5/weather?lat=" + loc.get(0) + "&lon=" + loc.get(
+                1
+            ) + "&appid=" + appid
         println("THE URL IS " + urlString)
 
         val url: URL = URL(urlString)
@@ -65,6 +70,6 @@ public class WeatherAPI : AsyncTask<Void, Void, String>() {
 
     fun handleResult(info: String?) {
         dataJSON = JSONObject(info)
-        println("DATA JSON  "+ dataJSON)
+        println("DATA JSON  " + dataJSON)
     }
 }
