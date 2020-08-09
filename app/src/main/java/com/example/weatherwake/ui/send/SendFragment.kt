@@ -1,7 +1,5 @@
 package com.example.weatherwake.ui.send
 
-import android.app.Activity
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,8 +8,6 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.example.weatherwake.APIs.WeatherAPI
-import com.example.weatherwake.MainActivity
 import com.example.weatherwake.R
 
 class SendFragment : Fragment() {

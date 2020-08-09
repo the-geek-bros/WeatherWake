@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.example.weatherwake.Activities.MainActivity
 import com.example.weatherwake.R
 
 class GalleryFragment : Fragment() {
@@ -26,6 +27,13 @@ class GalleryFragment : Fragment() {
         galleryViewModel.text.observe(this, Observer {
             textView.text = it
         })
+
+        val cityText: TextView = root.findViewById(R.id.cityText)
+        val currentCity:String = MainActivity().weatherInfo.getCity()
+        cityText.setText(currentCity)
+
+
+
         return root
     }
 }

@@ -90,8 +90,12 @@ public class WeatherAPI : AsyncTask<Void, Void, String>() {
     //used to execute weather based on user location
     public fun executeWeather(lat: Double, lon: Double): Unit {
         locationExecuted = false
-        loc.set(0, lat)
-        loc.set(1, lon)
+
+        val nlat = 47.6062
+        val nlon = 122.3321
+
+        loc.set(0, nlat)
+        loc.set(1, nlon)
         execute()
     }
 
