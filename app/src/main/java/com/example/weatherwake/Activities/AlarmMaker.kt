@@ -12,18 +12,25 @@ import com.example.weatherwake.R
 import java.util.*
 
 class AlarmMaker : AppCompatActivity(), AdapterView.OnItemSelectedListener {
-    lateinit var alarm_description_text: EditText
+    lateinit var alarm_note_text: EditText
     lateinit var cancel_button: Button
     lateinit var save_button: Button
+    lateinit var alarmTypesSpinner: Spinner
+    lateinit var alarmDetailsTextView: TextView
+    var alarmChosenPosition: Int = 0
+
+    //extra variables... might not make these global later
+    lateinit var dateChosen: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alarm_maker)
 
         //All alarm variables
-        alarm_description_text = findViewById(R.id.alarm_description)
+        alarm_note_text = findViewById(R.id.alarm_note)
         cancel_button = findViewById(R.id.button_cancel)
         save_button = findViewById(R.id.button_save)
+        alarmDetailsTextView = findViewById(R.id.alarmDetails)
     }
 
     override fun onStart() {
@@ -34,11 +41,6 @@ class AlarmMaker : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             val back_to_main_intent: Intent = Intent(applicationContext, MainActivity::class.java)
             startActivity(back_to_main_intent)
         }
-
-//        alarm_calendar_calendarView.setOnDateChangeListener(
-//
-//        )
-
 
         //listener for the cancel button
         save_button.setOnClickListener { view ->
@@ -56,7 +58,7 @@ class AlarmMaker : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
 
         //Spinner object
-        val alarmTypesSpinner: Spinner = findViewById(R.id.alarm_type_spinner)
+        alarmTypesSpinner = findViewById(R.id.alarm_type_spinner)
         val alarmTypesSpinnerAdapter = ArrayAdapter.createFromResource(
             this,
             R.array.alarm_types,
@@ -73,29 +75,55 @@ class AlarmMaker : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         val alarmChosen: String = parent?.getItemAtPosition(position).toString()
-        println("ALARM CHOSEN   "+alarmChosen)
+
+        //if statement stops setSelection() function from running the rest of the function if option was chosen
+        if (alarmChosenPosition == position) {
+            return
+        }
+        alarmChosenPosition = position
         when (alarmChosen) {
 //            "Recurring" -> Intent(applicationContext,)
-            "Calendar view" -> startActivity(Intent(applicationContext,AlarmCalendarView::class.java))
+            "Calendar view" -> {
+                startActivity(Intent(applicationContext, AlarmCalendarView::class.java))
+            }
+
         }
 
     }
 
 
     private fun createNewAlarm(date: Calendar): Unit {
-        val currentCalendar: Calendar = Calendar.getInstance()
-        if (date.compareTo(currentCalendar) < 0) {
-            val mActivity: MainActivity =
-                MainActivity()
-            mActivity.createAlertDialog(
-                "Date behind",
-                "Your date is a previous date",
-                "OK",
-                "DISMISS"
-            )
 
-        }
 
     }
+
+    override fun onPause() {
+        super.onPause()
+        val dateChosen = intent.getStringExtra("calendarDate")
+        println("CALENDAR DATE " + dateChosen)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        alarmTypesSpinner.setSelection(alarmChosenPosition)
+        when (alarmChosenPosition) {
+            2 -> {
+               alarmDetailsTextView.setText("Alarm Date Chosen: "+dateChosen)
+            }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        val dateData = intent?.getStringExtra("calendarDateString")
+        if (dateData != null) {
+            dateChosen = dateData
+        }
+
+        val dateObj = intent?.extras?.get("calendarObj")
+        onResume()
+
+    }
+
 
 }

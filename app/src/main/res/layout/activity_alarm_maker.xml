@@ -44,7 +44,7 @@
         app:layout_constraintVertical_bias="0.023" />
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/alarm_description"
+        android:id="@+id/alarm_note"
         android:layout_width="350dp"
         android:layout_height="59dp"
         android:layout_marginTop="52dp"
@@ -58,7 +58,7 @@
         android:layout_height="2dp"
         android:background="#c0c0c0"
         app:layout_constraintBottom_toTopOf="@+id/alarm_timePicker"
-        app:layout_constraintTop_toBottomOf="@+id/alarm_description"
+        app:layout_constraintTop_toBottomOf="@+id/alarm_note"
         tools:layout_editor_absoluteX="-30dp" />
 
     <TimePicker
@@ -70,7 +70,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/alarm_description" />
+        app:layout_constraintTop_toBottomOf="@+id/alarm_note" />
 
     <View
         android:id="@+id/divider"
@@ -93,5 +93,17 @@
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/divider" />
+
+    <TextView
+        android:id="@+id/alarmDetails"
+        android:layout_width="351dp"
+        android:layout_height="99dp"
+        android:layout_marginTop="32dp"
+        android:textAlignment="center"
+        android:textSize="25dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.516"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/alarm_type_spinner" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
