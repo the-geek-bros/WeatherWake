@@ -17,4 +17,10 @@
     //direct text
     <string name="newAlarmText">New Alarm</string>
 
+    <string-array name="alarm_types">
+        <item>One Time</item>
+        <item>Recurring</item>
+        <item>Calendar view</item>
+    </string-array>
+
 </resources>

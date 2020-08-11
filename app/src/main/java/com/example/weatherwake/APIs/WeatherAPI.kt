@@ -44,8 +44,8 @@ public class WeatherAPI : AsyncTask<Void, Void, String>() {
     // temp system ,c or f
     public fun getCurrentTemp(info: String, temp_system: Char): Double {
         when (temp_system) {
-            'c' -> return round(kelvin_temps.getOrDefault(info, 0.0) - 273.15, 2)
-            'f' -> return round((kelvin_temps.getOrDefault(info, 0.0) - 273.15) * 9 / 5 + 32, 2)
+            'c' -> return round(kelvin_temps.getOrDefault(info, 0.0) - 273.15, 1)
+            'f' -> return round((kelvin_temps.getOrDefault(info, 0.0) - 273.15) * 9 / 5 + 32, 1)
         }
         return Double.MIN_VALUE
     }
@@ -90,12 +90,8 @@ public class WeatherAPI : AsyncTask<Void, Void, String>() {
     //used to execute weather based on user location
     public fun executeWeather(lat: Double, lon: Double): Unit {
         locationExecuted = false
-
-        val nlat = 47.6062
-        val nlon = 122.3321
-
-        loc.set(0, nlat)
-        loc.set(1, nlon)
+        loc.set(0, lat)
+        loc.set(1, lon)
         execute()
     }
 
@@ -160,8 +156,8 @@ public class WeatherAPI : AsyncTask<Void, Void, String>() {
 
     //round values
     private fun round(value: Double, after_dot: Int): Double {
-        val int_form: Int = (value * after_dot).toInt()
-        return (int_form.toDouble() / after_dot)
+        val int_form: Int = (value * (Math.pow(10.0,after_dot.toDouble()))).toInt()
+        return (int_form / Math.pow(10.0,after_dot.toDouble()))
     }
 
 

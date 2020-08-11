@@ -8,10 +8,12 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Location
 import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.os.ProxyFileDescriptorCallback
 import android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
 import android.view.Menu
 import android.widget.Toast
@@ -25,18 +27,25 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherwake.APIs.WeatherAPI
+import com.example.weatherwake.Classes.Alarms_Adapter
 import com.example.weatherwake.R
 import com.example.weatherwake.Threads.SpinnerThread
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import kotlinx.android.synthetic.main.app_bar_main.* //allows direct access to the element without findViewByID
 
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     //location variable
-    var locManager: LocationManager? = null
+    lateinit var locManager: LocationManager
+
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     //Weather API ... weatherInfo
     var weatherInfo: WeatherAPI = WeatherAPI()
@@ -44,6 +53,10 @@ class MainActivity : AppCompatActivity() {
     //Spinner Thread
     val st = Thread(SpinnerThread(this))
 
+    //For the alarm_recyclerView
+//    private lateinit var alarms_recyclerView: RecyclerView //the actual recyclerView
+//    private lateinit var alarms_recyclerViewAdapter: RecyclerView.Adapter<*> //the adapter
+//    private lateinit var alarms_recyclerViewManager: RecyclerView.LayoutManager //measuring and positioning item views within a RecyclerView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +66,7 @@ class MainActivity : AppCompatActivity() {
 
         //location manager
         locManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -68,11 +82,8 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
 
         /*Recycler view for the alarm_list*/
-        val alarm_list = findViewById<RecyclerView>(R.id.alarm_recyclerView)
-
-        
-
-
+        alarms_recyclerView.layoutManager = LinearLayoutManager(this)
+        alarms_recyclerView.adapter = Alarms_Adapter()
 
 
         // Passing each menu ID as a set of Ids because each
@@ -127,9 +138,13 @@ class MainActivity : AppCompatActivity() {
 
     //tell us whether or not the user grant us to access ACCESS_COARSE_LOCATION and ACCESS_FINE_LOCATION
     private fun checkPermissions(): Boolean {
-        if (ContextCompat.checkSelfPermission(
+        if (ActivityCompat.checkSelfPermission(
                 this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
             return true
@@ -167,10 +182,9 @@ class MainActivity : AppCompatActivity() {
 
     //method to see if the user location is enabled...is their location on even though they allowed us to use it
     private fun isLocationEnabled(): Boolean {
-        val locationManager: LocationManager =
-            getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        return locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) || gps_enabled
+        val gps_enabled = locManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        val network_enabled = locManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+        return network_enabled || gps_enabled
     }
 
     //get the last known location
@@ -187,15 +201,19 @@ class MainActivity : AppCompatActivity() {
                         Manifest.permission.ACCESS_COARSE_LOCATION
                     ) == PackageManager.PERMISSION_GRANTED
                 ) {
-
                     val location: Location? =
-                        locManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                        locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
                     if (location != null) {
                         return doubleArrayOf(location.latitude, location.longitude)
                     }
                     //might want to make a location listener instead of this
                     else {
-                        Toast.makeText(this, "Location not used...", Toast.LENGTH_SHORT).show()
+                        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+
+                        }
+                        fusedLocationClient.lastLocation.addOnFailureListener {
+                            Toast.makeText(this, "Location Failed", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             } else {
@@ -209,7 +227,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             requestPermissions()
         }
-        return doubleArrayOf(-Double.MIN_VALUE, Double.MAX_VALUE)
+        return doubleArrayOf(0.0, 0.0)
     }
 
     //assert that the user has their internet connected
@@ -266,7 +284,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     //update the weather and the weather information
-    public fun updateWeather(): Unit{
+    public fun updateWeather(): Unit {
         val locArray: DoubleArray = getLastLocation()
         weatherInfo = WeatherAPI()
         weatherInfo.executeWeather(locArray[0], locArray[1])

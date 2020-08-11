@@ -8,10 +8,11 @@
 
     <TextView
         android:id="@+id/newAlarmtext"
-        android:layout_width="207dp"
-        android:layout_height="93dp"
+        android:layout_width="203dp"
+        android:layout_height="67dp"
         android:gravity="center|top"
         android:text="@string/newAlarmText"
+        android:textAlignment="center"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -42,24 +43,55 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.023" />
 
-    <EditText
-        android:id="@+id/alarm_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
-        android:ems="10"
-        android:inputType="time"
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/alarm_description"
+        android:layout_width="350dp"
+        android:layout_height="59dp"
+        android:layout_marginTop="52dp"
+        android:hint="Description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/newAlarmtext" />
 
-    <CalendarView
-        android:id="@+id/calendarView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#c0c0c0"
+        app:layout_constraintBottom_toTopOf="@+id/alarm_timePicker"
+        app:layout_constraintTop_toBottomOf="@+id/alarm_description"
+        tools:layout_editor_absoluteX="-30dp" />
+
+    <TimePicker
+        android:id="@+id/alarm_timePicker"
+        android:layout_width="397dp"
+        android:layout_height="178dp"
+        android:layout_marginTop="68dp"
+        android:timePickerMode="spinner"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/time" />
+        app:layout_constraintTop_toBottomOf="@+id/alarm_description" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="409dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/alarm_timePicker" />
+
+    <Spinner
+        android:id="@+id/alarm_type_spinner"
+        android:layout_width="322dp"
+        android:layout_height="67dp"
+        android:layout_marginTop="24dp"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/divider" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
