@@ -4,17 +4,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.weatherwake.Activities.CreateAlarm.alarmCalendarView
 import com.example.weatherwake.R
 import kotlinx.android.synthetic.main.alarm_row.view.*
 
-class Alarms_Adapter : RecyclerView.Adapter<Alarm_ViewHolder>() {
+class Alarms_Adapter(alarms_list: ArrayList<Alarm>) : RecyclerView.Adapter<Alarm_ViewHolder>() {
 
-    val alarms_list = listOf<Alarm>(
-        Alarm("12:00 AM", "12/20/2020", "Good morning USA!!! Its a great day"),
-        Alarm("1:00 AM", "12/21/2020", "Time to go to sleep"),
-        Alarm("12:00 PM", "12/25/2020", "This will be Christmas")
-    )
+    private val alarms_list: ArrayList<Alarm>
 
+//    val alarms_list = listOf<Alarm>(
+//        Alarm("12:00 AM", "12/20/2020", "Good morning USA!!! Its a great day"),
+//        Alarm("1:00 AM", "12/21/2020", "Time to go to sleep"),
+//        Alarm("12:00 PM", "12/25/2020", "This will be Christmas")
+//    )
+
+    init {
+        this.alarms_list = alarms_list
+    }
 
     //number of items
     override fun getItemCount(): Int {
@@ -23,7 +29,7 @@ class Alarms_Adapter : RecyclerView.Adapter<Alarm_ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Alarm_ViewHolder {
         //how to create a view
-        val layoutInflater: LayoutInflater = LayoutInflater.from(parent?.context)
+        val layoutInflater: LayoutInflater = LayoutInflater.from(parent.context)
         val cellForRow = layoutInflater.inflate(R.layout.alarm_row, parent, false)
 
         return Alarm_ViewHolder(cellForRow)
@@ -31,7 +37,7 @@ class Alarms_Adapter : RecyclerView.Adapter<Alarm_ViewHolder>() {
 
     override fun onBindViewHolder(holder: Alarm_ViewHolder, position: Int) {
         /*Method binds the data to the Recycler View here */
-        var iteratingAlarm = alarms_list.get(position)
+        val iteratingAlarm = alarms_list.get(position)
         holder.view.alarm_template_time.text = iteratingAlarm.getAlarmTime()
         holder.view.alarm_template_date.text = iteratingAlarm.getAlarmDate()
         holder.view.alarm_template_description.text = iteratingAlarm.getAlarmDescription()

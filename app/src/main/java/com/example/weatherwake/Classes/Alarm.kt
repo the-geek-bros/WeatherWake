@@ -1,9 +1,8 @@
 package com.example.weatherwake.Classes
 
-import java.sql.Time
-import java.util.*
+import java.io.Serializable //allows us to pass alarm objects between activities
 
-class Alarm(time: String,date: String, description: String) {
+class Alarm(time: String,date: String, description: String,daysOfWeek: Array<String>?,alarmType: Int) : Serializable {
     val time: String
     val date: String
     val description: String

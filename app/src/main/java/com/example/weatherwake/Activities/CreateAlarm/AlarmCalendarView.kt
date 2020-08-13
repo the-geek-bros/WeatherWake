@@ -59,7 +59,7 @@ class AlarmCalendarView : AppCompatActivity(), CalendarView.OnDateChangeListener
         val dayOfWeek: String? =
             calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.ENGLISH)
         val day = calendar.get(Calendar.DAY_OF_MONTH).toString()
-        val month = calendar.get(Calendar.MONTH).toString()
+        val month = (calendar.get(Calendar.MONTH)+1).toString()
         val year = calendar.get(Calendar.YEAR).toString()
 
         return dayOfWeek + " " + month + "/" + day + "/" + year

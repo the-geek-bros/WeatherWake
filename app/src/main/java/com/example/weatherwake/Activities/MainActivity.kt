@@ -30,6 +30,7 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherwake.APIs.WeatherAPI
+import com.example.weatherwake.Classes.Alarm
 import com.example.weatherwake.Classes.Alarms_Adapter
 import com.example.weatherwake.R
 import com.example.weatherwake.Threads.SpinnerThread
@@ -53,10 +54,13 @@ class MainActivity : AppCompatActivity() {
     //Spinner Thread
     val st = Thread(SpinnerThread(this))
 
-    //For the alarm_recyclerView
-//    private lateinit var alarms_recyclerView: RecyclerView //the actual recyclerView
-//    private lateinit var alarms_recyclerViewAdapter: RecyclerView.Adapter<*> //the adapter
-//    private lateinit var alarms_recyclerViewManager: RecyclerView.LayoutManager //measuring and positioning item views within a RecyclerView
+    //List of Alarms
+    val alarms_list: ArrayList<Alarm> = ArrayList()
+
+//    //For the alarm_recyclerView - testing
+//    private lateinit var alarms_recyclerView1: RecyclerView //the actual recyclerView
+//    private lateinit var alarms_recyclerViewAdapter1: RecyclerView.Adapter<*> //the adapter
+//    private lateinit var alarms_recyclerViewManager1: RecyclerView.LayoutManager //measuring and positioning item views within a RecyclerView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,6 +71,7 @@ class MainActivity : AppCompatActivity() {
         //location manager
         locManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -81,9 +86,9 @@ class MainActivity : AppCompatActivity() {
         val navView: NavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
 
-        /*Recycler view for the alarm_list*/
+
         alarms_recyclerView.layoutManager = LinearLayoutManager(this)
-        alarms_recyclerView.adapter = Alarms_Adapter()
+        alarms_recyclerView.adapter = Alarms_Adapter(alarms_list)
 
 
         // Passing each menu ID as a set of Ids because each
@@ -115,6 +120,18 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
 
     }//end of onResume
+
+    override fun onNewIntent(intent: Intent?) {
+        println("NEW INTENT")
+        super.onNewIntent(intent)
+        if (intent != null) {
+            if (intent.hasExtra("newAlarm")) {
+                val newAlarm: Alarm = intent.extras?.get("newAlarm") as Alarm
+                println("Date   " + newAlarm.getAlarmDate())
+                addAlarmToRecyclerView(newAlarm)
+            }
+        }
+    }
 
 
     @SuppressLint("SetTextI18n")
@@ -288,6 +305,11 @@ class MainActivity : AppCompatActivity() {
         val locArray: DoubleArray = getLastLocation()
         weatherInfo = WeatherAPI()
         weatherInfo.executeWeather(locArray[0], locArray[1])
+    }
+
+    public fun addAlarmToRecyclerView(newAlarm: Alarm) {
+        alarms_list.add(newAlarm)
+        alarms_recyclerView.adapter?.notifyItemInserted(alarms_list.size - 1);
     }
 
 }
