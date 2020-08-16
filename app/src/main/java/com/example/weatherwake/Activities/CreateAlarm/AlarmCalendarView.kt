@@ -36,12 +36,10 @@ class AlarmCalendarView : AppCompatActivity(), CalendarView.OnDateChangeListener
                 Toast.makeText(this, "Needs to be a Future Date", Toast.LENGTH_SHORT).show()
             } else {
                 val code: Int = 100
-                val formattedDate: String = getFormattedDate(calendarDate)
                 val backToAlarmMaker = Intent(this, AlarmMaker::class.java)
                 backToAlarmMaker.putExtra("calendarObj", calendarDate)
-                backToAlarmMaker.putExtra("calendarDateString", formattedDate)
-                backToAlarmMaker.addFlags (Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                startActivityIfNeeded(backToAlarmMaker,0)
+                backToAlarmMaker.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(backToAlarmMaker)
                 finish()
             }
         }
@@ -53,16 +51,6 @@ class AlarmCalendarView : AppCompatActivity(), CalendarView.OnDateChangeListener
 
     override fun onSelectedDayChange(view: CalendarView, year: Int, month: Int, dayOfMonth: Int) {
         calendarDate.set(year, month, dayOfMonth)
-    }
-
-    private fun getFormattedDate(calendar: Calendar): String {
-        val dayOfWeek: String? =
-            calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.ENGLISH)
-        val day = calendar.get(Calendar.DAY_OF_MONTH).toString()
-        val month = (calendar.get(Calendar.MONTH)+1).toString()
-        val year = calendar.get(Calendar.YEAR).toString()
-
-        return dayOfWeek + " " + month + "/" + day + "/" + year
     }
 
 }

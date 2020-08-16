@@ -12,12 +12,6 @@ class Alarms_Adapter(alarms_list: ArrayList<Alarm>) : RecyclerView.Adapter<Alarm
 
     private val alarms_list: ArrayList<Alarm>
 
-//    val alarms_list = listOf<Alarm>(
-//        Alarm("12:00 AM", "12/20/2020", "Good morning USA!!! Its a great day"),
-//        Alarm("1:00 AM", "12/21/2020", "Time to go to sleep"),
-//        Alarm("12:00 PM", "12/25/2020", "This will be Christmas")
-//    )
-
     init {
         this.alarms_list = alarms_list
     }
@@ -39,7 +33,7 @@ class Alarms_Adapter(alarms_list: ArrayList<Alarm>) : RecyclerView.Adapter<Alarm
         /*Method binds the data to the Recycler View here */
         val iteratingAlarm = alarms_list.get(position)
         holder.view.alarm_template_time.text = iteratingAlarm.getAlarmTime()
-        holder.view.alarm_template_date.text = iteratingAlarm.getAlarmDate()
+        holder.view.alarm_template_date.text = iteratingAlarm.getAlarmDateInfo()
         holder.view.alarm_template_description.text = iteratingAlarm.getAlarmDescription()
         holder.view.alarm_template_switch.isChecked = true
 

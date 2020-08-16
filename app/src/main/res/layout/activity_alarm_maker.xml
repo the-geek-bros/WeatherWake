@@ -48,6 +48,7 @@
         android:layout_width="350dp"
         android:layout_height="59dp"
         android:layout_marginTop="52dp"
+        android:maxLength="60"
         android:hint="Description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -45,7 +45,6 @@ class MainActivity : AppCompatActivity() {
 
     //location variable
     lateinit var locManager: LocationManager
-
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     //Weather API ... weatherInfo
@@ -54,7 +53,7 @@ class MainActivity : AppCompatActivity() {
     //Spinner Thread
     val st = Thread(SpinnerThread(this))
 
-    //List of Alarms
+    //List of Alarms ... move to Fragment viewModel
     val alarms_list: ArrayList<Alarm> = ArrayList()
 
 //    //For the alarm_recyclerView - testing
@@ -122,12 +121,10 @@ class MainActivity : AppCompatActivity() {
     }//end of onResume
 
     override fun onNewIntent(intent: Intent?) {
-        println("NEW INTENT")
         super.onNewIntent(intent)
         if (intent != null) {
             if (intent.hasExtra("newAlarm")) {
                 val newAlarm: Alarm = intent.extras?.get("newAlarm") as Alarm
-                println("Date   " + newAlarm.getAlarmDate())
                 addAlarmToRecyclerView(newAlarm)
             }
         }
@@ -253,7 +250,7 @@ class MainActivity : AppCompatActivity() {
             getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         var networkInfo: Boolean = cm.isDefaultNetworkActive
 
-        if (!(networkInfo != null && networkInfo == true)) {
+        if (!(networkInfo)) {
             createAlertDialog(
                 "No Internet Connection",
                 "Internet Connection needed to get weather",
