@@ -50,7 +50,7 @@ public class WeatherAPI : AsyncTask<Void, Void, String>() {
         return Double.MIN_VALUE
     }
 
-    //get main descriptions (main or description)
+    //get main descriptions (main or description) Ex: Main: Cloudy, Description: Partially Cloudy
     public fun getWeather(info: String): String {
         when (info) {
             "main" -> return current_main
@@ -90,8 +90,12 @@ public class WeatherAPI : AsyncTask<Void, Void, String>() {
     //used to execute weather based on user location
     public fun executeWeather(lat: Double, lon: Double): Unit {
         locationExecuted = false
-        loc.set(0, lat)
-        loc.set(1, lon)
+
+        val cLat = 39.2806
+        val cLon = -80.3445
+
+        loc.set(0, cLat)
+        loc.set(1, cLon)
         execute()
     }
 

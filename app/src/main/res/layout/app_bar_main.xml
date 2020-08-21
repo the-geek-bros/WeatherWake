@@ -26,15 +26,6 @@
         android:id="@+id/include"
         layout="@layout/content_main" />
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
-        android:layout_width="392dp"
-        android:layout_height="704dp">
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/alarms_recyclerView"
         android:layout_width="396dp"

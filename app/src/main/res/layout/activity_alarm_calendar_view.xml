@@ -22,7 +22,6 @@
         android:text="Choose date of Alarm"
         android:textAlignment="center"
         android:textSize="30dp"
-        app:layout_constraintBottom_toTopOf="@+id/calendarView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

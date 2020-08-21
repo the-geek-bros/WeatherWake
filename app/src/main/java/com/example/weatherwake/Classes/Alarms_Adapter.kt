@@ -36,8 +36,6 @@ class Alarms_Adapter(alarms_list: ArrayList<Alarm>) : RecyclerView.Adapter<Alarm
         holder.view.alarm_template_date.text = iteratingAlarm.getAlarmDateInfo()
         holder.view.alarm_template_description.text = iteratingAlarm.getAlarmDescription()
         holder.view.alarm_template_switch.isChecked = true
-
-
     }
 
 

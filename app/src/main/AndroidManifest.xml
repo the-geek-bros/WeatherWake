@@ -13,6 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Activities.RingingAlarm">
+
+        </activity>
         <activity android:name=".Activities.CreateAlarm.RecurringAlarms"></activity>
         <activity android:name=".Activities.CreateAlarm.AlarmCalendarView" />
         <activity android:name=".Activities.AlarmMaker" />

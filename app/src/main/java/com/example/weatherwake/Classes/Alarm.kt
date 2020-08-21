@@ -5,14 +5,15 @@ import java.text.SimpleDateFormat
 import java.time.Month
 import java.util.*
 
-class Alarm(calendar: Calendar,description: String,daysOfWeek: Array<String>?,alarmType: Int,randomId: Int) : Serializable {
+class Alarm(calendar: Calendar,alarmDateInfo: String,description: String,daysOfWeek: IntArray?,alarmType: Int,randomId: Int) : Serializable {
 
     private lateinit var calendar: Calendar
     private var description: String
     private var active: Boolean = true
-    private var daysOfWeek: Array<String>? = null
+    private var daysOfWeek: IntArray? = null
     private var alarmType: Int = -1
     private var randomId: Int = 0
+    private lateinit var alarmDateInfo: String
 
 
     init {
@@ -21,6 +22,7 @@ class Alarm(calendar: Calendar,description: String,daysOfWeek: Array<String>?,al
         this.daysOfWeek = daysOfWeek
         this.randomId = randomId
         this.alarmType = alarmType
+        this.alarmDateInfo = alarmDateInfo
     }
 
     //Functions
@@ -34,18 +36,7 @@ class Alarm(calendar: Calendar,description: String,daysOfWeek: Array<String>?,al
 
     //returns whether info about whether alarm is today, tomorrow, days of week, or calendar
     public fun getAlarmDateInfo(): String{
-        when(this.alarmType){
-            0 -> {
-                if (calendar.get(Calendar.DATE) == Calendar.getInstance().get(Calendar.DATE)) {
-                    return "Today"
-                } else {
-                    return "Tomorrow"
-                }
-
-            }
-            2 -> return getFormattedDate(calendar,false)
-        }
-        return ""
+        return alarmDateInfo
     }
 
     public fun getAlarmDescription(): String {
@@ -73,11 +64,6 @@ class Alarm(calendar: Calendar,description: String,daysOfWeek: Array<String>?,al
     public fun setAlarmDescription(newDescription: String) {
         this.description = newDescription
     }
-
-    public fun setAlarmDays(days: Array<String>) {
-        this.daysOfWeek = days
-    }
-
 
     public fun toggleAlarm() {
         active = !active

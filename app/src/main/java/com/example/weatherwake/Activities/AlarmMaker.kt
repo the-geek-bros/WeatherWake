@@ -12,11 +12,14 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.weatherwake.Activities.CreateAlarm.AlarmCalendarView
+import com.example.weatherwake.Activities.CreateAlarm.DaysOfWeek_ViewHolder
+import com.example.weatherwake.Activities.CreateAlarm.OnItemClickListenerDayOfWeek
 import com.example.weatherwake.Activities.CreateAlarm.RecurringAlarms
 import com.example.weatherwake.Classes.Alarm
 import com.example.weatherwake.Classes.AlarmHandlers
 import com.example.weatherwake.Classes.AlarmReceiver
 import com.example.weatherwake.R
+import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -30,8 +33,13 @@ class AlarmMaker : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     lateinit var alarmTimePicker: TimePicker
 
     /*global variables...might not make some of these global*/
+    lateinit var alarmHandler: AlarmHandlers
     var alarmChosenCalendar: Calendar =
         Calendar.getInstance() //object will be calendar object of the time chosen
+
+    //For when there are recurring alarms
+    lateinit var daysOfWeekChosen: IntArray
+    val daysOfWeek = listOf("Sun","Mon","Tues","Wed","Thurs","Fri","Sat")
 
     //alarm display
     var alarmDateInfo: String = "" //will display today, tomorrow, days of week, or Calendar day
@@ -51,6 +59,10 @@ class AlarmMaker : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         alarmDetailsTextView = findViewById(R.id.alarmDetails)
         alarmTimePicker = findViewById(R.id.alarm_timePicker)
         alarmTypesSpinner = findViewById(R.id.alarm_type_spinner)
+
+        //alarm handler
+        alarmHandler = AlarmHandlers(this)
+
 
         /*Create all of the listeners */
 
@@ -121,13 +133,18 @@ class AlarmMaker : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        if (intent != null)
+        if (intent != null) {
             if (intent.hasExtra("calendarObj")) {
                 val calendarObj: Calendar = intent?.extras?.get("calendarObj") as Calendar
                 alarmChosenCalendar.set(Calendar.DATE, calendarObj.get(Calendar.DATE))
                 alarmChosenCalendar.set(Calendar.MONTH, calendarObj.get(Calendar.MONTH))
                 alarmChosenCalendar.set(Calendar.YEAR, calendarObj.get(Calendar.YEAR))
             }
+            else if(intent.hasExtra("Days Chosen")){
+                daysOfWeekChosen = intent.getIntArrayExtra("Days Chosen")!!
+            }
+        }
+
         updateAlarmDetails()
 
     }//end onNewIntent
@@ -159,15 +176,15 @@ class AlarmMaker : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     //adds alarm to recycler view and to alarm manager
     private fun createNewAlarm() {
         val randomId = (Math.random() * 1000000).toInt()
-        alarmChosenCalendar.set(Calendar.SECOND,0)
-        val newAlarm: Alarm =
-            Alarm(
-                alarmChosenCalendar,
-                alarm_note_text.text.toString(),
-                null,
-                alarmChosenPosition,
-                randomId
-            )
+        alarmChosenCalendar.set(Calendar.SECOND, 0)
+        val newAlarm = Alarm(
+            alarmChosenCalendar,
+            alarmDateInfo,
+            alarm_note_text.text.toString(),
+            daysOfWeekChosen,
+            alarmChosenPosition,
+            randomId
+        )
         // Adds the alarm to the recycler view of alarms so that it is displayed on the main page
         addAlarmToRecyclerView(newAlarm)
         // Creates a new pending alarm for the specific date and time
@@ -183,29 +200,33 @@ class AlarmMaker : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     //updates alarm details at bottom of screen based on alarm option chosen
     private fun updateAlarmDetails() {
-        val info: String
         val alarmDetailStartString = "Setting Alarm for\n"
+        val info = StringBuilder(alarmDetailStartString)
         when (alarmChosenPosition) {
             0 -> {
                 val todayOrTomorrow =
                     if (tomorrowSet) "Tomorrow" else "Today"
                 alarmDateInfo = todayOrTomorrow
-                info = alarmDetailStartString + " " + todayOrTomorrow + " " + getFormattedTime(
-                    alarmChosenCalendar
-                )
-                alarmDetailsTextView.setText(info)
+                info.append(todayOrTomorrow," ",getFormattedTime(alarmChosenCalendar))
             }
+
+            1 -> {
+                info.append(getFormattedTime(alarmChosenCalendar)," on ")
+                val listOfDates: StringBuilder = StringBuilder()
+                for(x in 0 until daysOfWeekChosen.size-1){
+                    listOfDates.append(daysOfWeek[daysOfWeekChosen[x]],", ")
+                }
+                listOfDates.append(daysOfWeek[daysOfWeekChosen[daysOfWeekChosen.size-1]])
+                info.append(listOfDates)
+                alarmDateInfo = info.toString()
+            }
+
             2 -> {
-                info =
-                    alarmDetailStartString + getFormattedTime(alarmChosenCalendar) + " " + getFormattedDate(
-                        alarmChosenCalendar,
-                        true
-                    )
+                info.append(getFormattedTime(alarmChosenCalendar)," ",getFormattedDate(alarmChosenCalendar,true))
                 alarmDateInfo = getFormattedDate(alarmChosenCalendar, false)
-                alarmDetailsTextView.setText(info)
             }
         }
-
+        alarmDetailsTextView.setText(info)
     }
 
     //takes a calendar objects and formats it to be m/d/yyyy. Adds dayOfWeek if true,
@@ -227,14 +248,12 @@ class AlarmMaker : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private fun addAlarmToRecyclerView(newAlarm: Alarm) {
         val back_to_main_intent: Intent = Intent(applicationContext, MainActivity::class.java)
         back_to_main_intent.putExtra("newAlarm", newAlarm)
-        back_to_main_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        back_to_main_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
         startActivity(back_to_main_intent)
     }
 
     private fun addAlarmToAlarmManager(newAlarm: Alarm) {
-        val alarmHandler = AlarmHandlers(this)
         alarmHandler.addAlarmToAlarmManager(newAlarm)
-
-        println("New alarm made for "+newAlarm.getAlarmDate()+newAlarm.getAlarmTime())
     }
+
 }
