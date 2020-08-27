@@ -1,5 +1,7 @@
 package com.example.weatherwake.Classes
 
+/*Alarm Receiver Class. Receives broadcast from alarm manager and sends alarm and information to Ringing Alarm activity */
+
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent

@@ -1,7 +1,7 @@
 package com.example.weatherwake.Threads
 
-/*This thread is in charge of the spinner, which keeps spinning loading icon until weather data
-is executed. Once executed thread updates weather data and finishes
+/*Spinner Thread. This thread is in charge of the spinner, which keeps spinning loading icon until weather data
+is executed in the menu bar. Once executed thread updates weather data and finishes
  */
 
 import android.annotation.SuppressLint

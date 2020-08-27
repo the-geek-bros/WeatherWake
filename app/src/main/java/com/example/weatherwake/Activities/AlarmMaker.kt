@@ -1,11 +1,9 @@
 package com.example.weatherwake.Activities
 
-/*This is the activity where they will be able to make a new alarm*/
+/*AlarmMaker Activity. This is the activity where the user creates a new alarm
+* Alarm is made and sent to the Main Activity to add to Recycler view and to the Alarm Manager.
+* */
 
-import android.app.Activity
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -17,7 +15,6 @@ import com.example.weatherwake.Activities.CreateAlarm.OnItemClickListenerDayOfWe
 import com.example.weatherwake.Activities.CreateAlarm.RecurringAlarms
 import com.example.weatherwake.Classes.Alarm
 import com.example.weatherwake.Classes.AlarmHandlers
-import com.example.weatherwake.Classes.AlarmReceiver
 import com.example.weatherwake.R
 import java.lang.StringBuilder
 import java.text.SimpleDateFormat

@@ -1,13 +1,21 @@
 package com.example.weatherwake.Classes
 
+/*Alarm Class. Is the Alarm object which holds all alarm information and allows alarm to be passed around */
+
 import java.io.Serializable //allows us to pass alarm objects between activities
 import java.text.SimpleDateFormat
-import java.time.Month
 import java.util.*
 
-class Alarm(calendar: Calendar,alarmDateInfo: String,description: String,daysOfWeek: IntArray,alarmType: Int,randomId: Int) : Serializable {
+class Alarm(
+    calendar: Calendar,
+    alarmDateInfo: String,
+    description: String,
+    daysOfWeek: IntArray,
+    alarmType: Int,
+    randomId: Int
+) : Serializable {
 
-    private lateinit var calendar: Calendar
+    private var calendar: Calendar
     private var description: String
     private var active: Boolean = true
     private var daysOfWeek: IntArray
@@ -31,11 +39,11 @@ class Alarm(calendar: Calendar,alarmDateInfo: String,description: String,daysOfW
     }
 
     public fun getAlarmDate(): String {
-        return getFormattedDate(calendar,false)
+        return getFormattedDate(calendar, false)
     }
 
     //returns whether info about whether alarm is today, tomorrow, days of week, or calendar
-    public fun getAlarmDateInfo(): String{
+    public fun getAlarmDateInfo(): String {
         return alarmDateInfo
     }
 
@@ -43,22 +51,23 @@ class Alarm(calendar: Calendar,alarmDateInfo: String,description: String,daysOfW
         return description
     }
 
-    public fun getAlarmId(): Int{
+    public fun getAlarmId(): Int {
         return randomId
     }
-    public fun getCalendar():Calendar{
+
+    public fun getCalendar(): Calendar {
         return calendar
     }
 
-    public fun setAlarmTime(hourOfDay:Int,minute:Int) {
-        this.calendar.set(Calendar.HOUR_OF_DAY,hourOfDay)
-        this.calendar.set(Calendar.MINUTE,minute)
+    public fun setAlarmTime(hourOfDay: Int, minute: Int) {
+        this.calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
+        this.calendar.set(Calendar.MINUTE, minute)
     }
 
-    public fun setAlarmDateInfo(month: Int,date:Int,year:Int) {
-        calendar.set(Calendar.MONTH,month)
-        calendar.set(Calendar.DATE,date)
-        calendar.set(Calendar.YEAR,year)
+    public fun setAlarmDateInfo(month: Int, date: Int, year: Int) {
+        calendar.set(Calendar.MONTH, month)
+        calendar.set(Calendar.DATE, date)
+        calendar.set(Calendar.YEAR, year)
     }
 
     public fun setAlarmDescription(newDescription: String) {

@@ -1,5 +1,7 @@
 package com.example.weatherwake.Classes
 
+/*Recycler View adapter which stores the list of all created alarms */
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

@@ -1,18 +1,13 @@
 package com.example.weatherwake.Activities
+/* Main Activity. Is the launcher page of the application. Shows current alarms as well as the button to create a new alarm.
+ */
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.location.LocationManager
-import android.net.ConnectivityManager
 import android.os.Bundle
-import android.os.ProxyFileDescriptorCallback
-import android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
 import android.view.Menu
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -20,15 +15,12 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherwake.APIs.WeatherAPI
 import com.example.weatherwake.Classes.Alarm
 import com.example.weatherwake.Classes.Alarms_Adapter
 import com.example.weatherwake.Classes.Utilities
 import com.example.weatherwake.R
 import com.example.weatherwake.Threads.SpinnerThread
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.app_bar_main.* //allows direct access to the element without findViewByID

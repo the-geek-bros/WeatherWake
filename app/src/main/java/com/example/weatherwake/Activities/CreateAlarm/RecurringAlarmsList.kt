@@ -1,5 +1,8 @@
 package com.example.weatherwake.Activities.CreateAlarm
 
+/* Recurring Alarm Activity. Activity used for user to choose which days of the week an alarm will be on. Sends
+* days of week chosen to the AlarmMaker activity */
+
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle

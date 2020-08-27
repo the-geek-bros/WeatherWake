@@ -13,9 +13,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.RingingAlarm">
+        <activity
+            android:name=".Activities.RingingAlarm"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
 
-        </activity>
         <activity android:name=".Activities.CreateAlarm.RecurringAlarms" />
         <activity android:name=".Activities.CreateAlarm.AlarmCalendarView" />
 
@@ -31,9 +33,11 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".Classes.AlarmReceiver"  android:exported="true">
+        <receiver
+            android:name=".Classes.AlarmReceiver"
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.INPUT_METHOD_CHANGED" />
             </intent-filter>
         </receiver>

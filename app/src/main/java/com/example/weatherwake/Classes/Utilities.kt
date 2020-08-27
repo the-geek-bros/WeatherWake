@@ -1,5 +1,6 @@
 package com.example.weatherwake.Classes
-//package utilities
+
+/*Utilities Class. Makes sure all user permissions for location and internet are ok. Has method to get user's location */
 
 import android.Manifest
 import android.app.Activity

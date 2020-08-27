@@ -1,5 +1,10 @@
 package com.example.weatherwake.Activities.CreateAlarm
 
+/* Calendar View Activity. Activity is in charge of getting the Calendar Date the user wants the alarm to ring on.
+    Sends back to Alarm Maker the date user chooses
+ */
+
+
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

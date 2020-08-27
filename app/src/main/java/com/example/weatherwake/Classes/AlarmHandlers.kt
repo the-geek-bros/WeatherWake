@@ -1,6 +1,6 @@
 package com.example.weatherwake.Classes
 
-/*This class has methods which will be used to add alarms to the alarm manager and cancel alarms. AlarmHandler Object
+/*Alarm Handlers Class. This class has methods which will be used to add alarms to the alarm manager and cancel alarms. AlarmHandler Object
 has to be created with the activity passed in as well as the alarm*/
 
 
@@ -59,7 +59,9 @@ class AlarmHandlers(activity: Activity) {
     }
 
     private fun deleteAlarm(alarm: Alarm){
+        //delete pending intents of alarm
 
+        //delete alarm from the Recycler View
     }
 
 

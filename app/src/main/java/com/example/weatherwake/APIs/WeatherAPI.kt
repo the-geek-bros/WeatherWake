@@ -1,5 +1,7 @@
 package com.example.weatherwake.APIs
 
+/*Weather API. Retreives weather and weather details of user's coordinates*/
+
 import android.graphics.drawable.Drawable
 import android.os.AsyncTask
 import org.json.JSONObject
@@ -90,11 +92,8 @@ public class WeatherAPI : AsyncTask<Void, Void, String>() {
     public fun executeWeather(lat: Double, lon: Double): Unit {
         locationExecuted = false
 
-        val cLat = 39.2806
-        val cLon = -80.3445
-
-        loc.set(0, cLat)
-        loc.set(1, cLon)
+        loc.set(0, lat)
+        loc.set(1, lon)
         execute()
     }
 
