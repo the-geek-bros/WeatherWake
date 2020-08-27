@@ -4,6 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/alarm_template_description" />
 
     <TextView
         android:id="@+id/alarm_template_time"
@@ -12,34 +20,32 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:text="12:00 AM"
-        android:textSize="40dp"
+        android:textSize="40sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/alarm_template_date"
-        android:layout_width="118dp"
-        android:layout_height="37dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="4dp"
+        android:layout_width="156dp"
+        android:layout_height="54dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="5dp"
         android:text="12/23/2019"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/alarm_template_description"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/alarm_template_time" />
+        app:layout_constraintTop_toBottomOf="@+id/alarm_template_time"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/alarm_template_description"
-        android:layout_width="247dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="12dp"
+        android:layout_width="234dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="7dp"
         android:text="Take out the trash and walk the dog today"
         android:textSize="16dp"
-        app:layout_constraintStart_toEndOf="@+id/alarm_template_date"
-        app:layout_constraintTop_toBottomOf="@+id/alarm_template_switch" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/alarm_template_date" />
 
     <Switch
         android:id="@+id/alarm_template_switch"
@@ -47,17 +53,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="160dp"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="13dp"
+        app:layout_constraintBottom_toTopOf="@+id/alarm_template_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.157"
         app:layout_constraintStart_toEndOf="@+id/alarm_template_time"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <View
-        android:id="@+id/divider2"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/alarm_template_description" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

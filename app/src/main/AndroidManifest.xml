@@ -16,8 +16,9 @@
         <activity android:name=".Activities.RingingAlarm">
 
         </activity>
-        <activity android:name=".Activities.CreateAlarm.RecurringAlarms"></activity>
+        <activity android:name=".Activities.CreateAlarm.RecurringAlarms" />
         <activity android:name=".Activities.CreateAlarm.AlarmCalendarView" />
+
         <activity android:name=".Activities.AlarmMaker" />
         <activity
             android:name=".Activities.MainActivity"
@@ -30,7 +31,12 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".Classes.AlarmReceiver" />
+        <receiver android:name=".Classes.AlarmReceiver"  android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.INPUT_METHOD_CHANGED" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

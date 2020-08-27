@@ -6,4 +6,51 @@
     android:layout_height="match_parent"
     tools:context=".Activities.RingingAlarm">
 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="222dp"
+        android:layout_height="58dp"
+        android:layout_marginTop="16dp"
+        android:text="Alarm!"
+        android:textAlignment="center"
+        android:textSize="40sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewAlarmRingingDescription"
+        android:layout_width="366dp"
+        android:layout_height="143dp"
+        android:layout_marginTop="68dp"
+        android:text="Description"
+        android:textAlignment="center"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.488"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+    <Button
+        android:id="@+id/btnStopAlarm"
+        android:layout_width="313dp"
+        android:layout_height="114dp"
+        android:layout_marginBottom="56dp"
+        android:background="@color/colorPrimary"
+        android:text="Stop Alarm"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewCurrentWeather"
+        android:layout_width="360dp"
+        android:layout_height="117dp"
+        android:layout_marginBottom="116dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/btnStopAlarm"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.549"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,15 +5,15 @@ import java.text.SimpleDateFormat
 import java.time.Month
 import java.util.*
 
-class Alarm(calendar: Calendar,alarmDateInfo: String,description: String,daysOfWeek: IntArray?,alarmType: Int,randomId: Int) : Serializable {
+class Alarm(calendar: Calendar,alarmDateInfo: String,description: String,daysOfWeek: IntArray,alarmType: Int,randomId: Int) : Serializable {
 
     private lateinit var calendar: Calendar
     private var description: String
     private var active: Boolean = true
-    private var daysOfWeek: IntArray? = null
+    private var daysOfWeek: IntArray
     private var alarmType: Int = -1
     private var randomId: Int = 0
-    private lateinit var alarmDateInfo: String
+    private var alarmDateInfo: String
 
 
     init {

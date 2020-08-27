@@ -35,7 +35,6 @@ class AlarmCalendarView : AppCompatActivity(), CalendarView.OnDateChangeListener
             if (calendarDate.before(currentDate)) {
                 Toast.makeText(this, "Needs to be a Future Date", Toast.LENGTH_SHORT).show()
             } else {
-                val code: Int = 100
                 val backToAlarmMaker = Intent(this, AlarmMaker::class.java)
                 backToAlarmMaker.putExtra("calendarObj", calendarDate)
                 backToAlarmMaker.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);

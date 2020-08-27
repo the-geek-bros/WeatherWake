@@ -11,7 +11,6 @@ import java.sql.Time
 import java.util.concurrent.TimeUnit
 import kotlin.collections.HashMap
 
-private var dataJSON: JSONObject? = null
 lateinit var loc: DoubleArray
 private var locationExecuted: Boolean = false
 

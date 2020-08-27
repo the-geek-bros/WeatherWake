@@ -36,10 +36,6 @@ import kotlinx.android.synthetic.main.app_bar_main.* //allows direct access to t
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
 
-    //location variable
-    lateinit var locManager: LocationManager
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-
     //Weather API ... weatherInfo
     var weatherInfo: WeatherAPI = WeatherAPI()
 

@@ -3,19 +3,28 @@ package com.example.weatherwake.Classes
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import androidx.core.content.ContextCompat.startActivity
 import com.example.weatherwake.Activities.RingingAlarm
+import com.google.gson.Gson
 import java.util.*
 
+
 class AlarmReceiver : BroadcastReceiver() {
+    var alarmToRing: Alarm = Alarm(Calendar.getInstance(),"Today","Hello There joe",
+        IntArray(0),1,123
+    )
+
     //method called when the alarm is fired
     override fun onReceive(context: Context?, intent: Intent?) {
-        val date = Calendar.getInstance()
-        if(context!=null){
-            val goToAlarm= Intent(context, RingingAlarm::class.java)
 
+        val alarmGSON = intent?.action
+        if(alarmGSON!=null){
+            alarmToRing = Gson().fromJson(alarmGSON, Alarm::class.java)
         }
 
-        println("THE ALARM RANG AT " + date.get(Calendar.HOUR) + ":" + date.get(Calendar.MINUTE))
+        if (context != null) {
+            val goToRingingAlarm = Intent(context.applicationContext, RingingAlarm::class.java)
+            goToRingingAlarm.putExtra("newAlarmToRing", alarmToRing)
+            context.startActivity(goToRingingAlarm)
+        }
     }
 }

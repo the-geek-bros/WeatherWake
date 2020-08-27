@@ -38,8 +38,8 @@ class AlarmMaker : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         Calendar.getInstance() //object will be calendar object of the time chosen
 
     //For when there are recurring alarms
-    lateinit var daysOfWeekChosen: IntArray
-    val daysOfWeek = listOf("Sun","Mon","Tues","Wed","Thurs","Fri","Sat")
+    var daysOfWeekChosen: IntArray = IntArray(0)
+    val daysOfWeek = listOf("Su", "Mo", "Tu", "We", "Th", "Fr", "Sa")
 
     //alarm display
     var alarmDateInfo: String = "" //will display today, tomorrow, days of week, or Calendar day
@@ -74,7 +74,7 @@ class AlarmMaker : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
         //listener for the save button... creates the Alarm object. Makes sure alarm is in the future
         save_button.setOnClickListener { view ->
-            if (alarmChosenCalendar.before(Calendar.getInstance())) {
+            if (alarmChosenPosition != 1 && alarmChosenCalendar.before(Calendar.getInstance())) {
                 Toast.makeText(this, "Alarm has to be in future", Toast.LENGTH_SHORT).show()
             } else {
                 createNewAlarm()
@@ -139,8 +139,7 @@ class AlarmMaker : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 alarmChosenCalendar.set(Calendar.DATE, calendarObj.get(Calendar.DATE))
                 alarmChosenCalendar.set(Calendar.MONTH, calendarObj.get(Calendar.MONTH))
                 alarmChosenCalendar.set(Calendar.YEAR, calendarObj.get(Calendar.YEAR))
-            }
-            else if(intent.hasExtra("Days Chosen")){
+            } else if (intent.hasExtra("Days Chosen")) {
                 daysOfWeekChosen = intent.getIntArrayExtra("Days Chosen")!!
             }
         }
@@ -173,9 +172,9 @@ class AlarmMaker : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     /*VARIOUS METHODS FOR THE ALARM MAKER CLASS */
 
-    //adds alarm to recycler view and to alarm manager
+    //Creates alarm object and adds alarm to recycler view and to alarm manager
     private fun createNewAlarm() {
-        val randomId = (Math.random() * 1000000).toInt()
+        val randomId:Int = UUID.randomUUID().hashCode()
         alarmChosenCalendar.set(Calendar.SECOND, 0)
         val newAlarm = Alarm(
             alarmChosenCalendar,
@@ -207,22 +206,26 @@ class AlarmMaker : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 val todayOrTomorrow =
                     if (tomorrowSet) "Tomorrow" else "Today"
                 alarmDateInfo = todayOrTomorrow
-                info.append(todayOrTomorrow," ",getFormattedTime(alarmChosenCalendar))
+                info.append(todayOrTomorrow, " ", getFormattedTime(alarmChosenCalendar))
             }
 
             1 -> {
-                info.append(getFormattedTime(alarmChosenCalendar)," on ")
+                info.append(getFormattedTime(alarmChosenCalendar), " on ")
                 val listOfDates: StringBuilder = StringBuilder()
-                for(x in 0 until daysOfWeekChosen.size-1){
-                    listOfDates.append(daysOfWeek[daysOfWeekChosen[x]],", ")
+                for (x in 0 until daysOfWeekChosen.size - 1) {
+                    listOfDates.append(daysOfWeek[daysOfWeekChosen[x]], ", ")
                 }
-                listOfDates.append(daysOfWeek[daysOfWeekChosen[daysOfWeekChosen.size-1]])
+                listOfDates.append(daysOfWeek[daysOfWeekChosen[daysOfWeekChosen.size - 1]])
                 info.append(listOfDates)
-                alarmDateInfo = info.toString()
+                alarmDateInfo = listOfDates.toString()
             }
 
             2 -> {
-                info.append(getFormattedTime(alarmChosenCalendar)," ",getFormattedDate(alarmChosenCalendar,true))
+                info.append(
+                    getFormattedTime(alarmChosenCalendar),
+                    " ",
+                    getFormattedDate(alarmChosenCalendar, true)
+                )
                 alarmDateInfo = getFormattedDate(alarmChosenCalendar, false)
             }
         }

@@ -10,39 +10,56 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import androidx.core.content.ContextCompat.startActivity
 import com.example.weatherwake.Activities.RingingAlarm
+import com.google.gson.Gson
+import java.time.DayOfWeek
 import java.util.*
 
 class AlarmHandlers(activity: Activity) {
     var activity: Activity
-    val alarmManager: AlarmManager = activity.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    val alarmManager: AlarmManager =
+        activity.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
     init {
         this.activity = activity
     }
 
     public fun addAlarmToAlarmManager(newAlarm: Alarm) {
-        val ringAlarmIntent = Intent(activity.applicationContext, RingingAlarm::class.java)
+        val ringAlarmIntent = Intent(activity.applicationContext, AlarmReceiver::class.java)
+        ringAlarmIntent.setAction(Gson().toJson(newAlarm))
+
         val pendingIntent: PendingIntent = PendingIntent.getBroadcast(
             activity.applicationContext,
             newAlarm.getAlarmId(),
-            ringAlarmIntent,
-            0
+            ringAlarmIntent, Intent.FILL_IN_DATA)
+
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            newAlarm.getCalendar().timeInMillis,
+            pendingIntent
         )
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,newAlarm.getCalendar().timeInMillis,pendingIntent)
     }
 
-    public fun cancelAlarm(alarmCancelling: Alarm) {
+    public fun cancelAlarmInAlarmManager(alarmCancelling: Alarm) {
         val ringAlarmIntent: Intent = Intent(activity.applicationContext, RingingAlarm::class.java)
         val pendingIntent: PendingIntent = PendingIntent.getBroadcast(
             activity.applicationContext,
             alarmCancelling.getAlarmId(),
             ringAlarmIntent,
-            0
+            PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         alarmManager.cancel(pendingIntent)
+    }
+
+    private fun makeRecurringAlarm(alarm: Alarm){
+
+    }
+
+    private fun deleteAlarm(alarm: Alarm){
+
     }
 
 
