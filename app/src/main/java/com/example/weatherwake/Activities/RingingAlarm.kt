@@ -44,7 +44,7 @@ class RingingAlarm : AppCompatActivity() {
                 "Rain" to R.raw.rain_song,
                 "Snow" to R.raw.snow_song,
                 "Clear" to R.raw.clear_sky_song,
-                "Clounds" to R.raw.cloudy_song
+                "Clouds" to R.raw.cloudy_song
             )
 
 
