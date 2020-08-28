@@ -26,6 +26,7 @@
         android:id="@+id/include"
         layout="@layout/content_main" />
 
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/alarms_recyclerView"
         android:layout_width="396dp"
@@ -48,5 +49,16 @@
         app:layout_constraintHorizontal_bias="0.895"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/new_alarm" />
+
+    <TextView
+        android:id="@+id/textViewNoAlarms"
+        android:layout_width="393dp"
+        android:layout_height="107dp"
+        android:layout_gravity="center|center_horizontal"
+        android:text="No Alarms"
+        android:textAlignment="center"
+        android:textSize="40sp"
+ />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

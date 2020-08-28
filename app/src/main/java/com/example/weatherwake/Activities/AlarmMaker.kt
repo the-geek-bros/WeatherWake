@@ -66,7 +66,7 @@ class AlarmMaker : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         //listener for the cancel button
         cancel_button.setOnClickListener { view ->
             val back_to_main_intent: Intent = Intent(applicationContext, MainActivity::class.java)
-            back_to_main_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            back_to_main_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             startActivity(back_to_main_intent)
         }
         //listener for the save button... creates the Alarm object. Makes sure alarm is in the future

@@ -9,10 +9,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherwake.Activities.CreateAlarm.alarmCalendarView
 import com.example.weatherwake.R
 import kotlinx.android.synthetic.main.alarm_row.view.*
+import java.util.*
+import kotlin.collections.ArrayList
 
-class Alarms_Adapter(alarms_list: ArrayList<Alarm>) : RecyclerView.Adapter<Alarm_ViewHolder>() {
+class Alarms_Adapter(alarms_list: LinkedList<Alarm>) : RecyclerView.Adapter<Alarm_ViewHolder>() {
 
-    private val alarms_list: ArrayList<Alarm>
+    private val alarms_list: LinkedList<Alarm>
 
     init {
         this.alarms_list = alarms_list

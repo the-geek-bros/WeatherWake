@@ -44,7 +44,7 @@ class RingingAlarm : AppCompatActivity() {
                 "Rain" to R.raw.rain_song,
                 "Snow" to R.raw.snow_song,
                 "Clear" to R.raw.clear_sky_song,
-                "Clounds" to R.raw.cloudy_song
+                "Clouds" to R.raw.cloudy_song
             )
 
 
@@ -93,10 +93,12 @@ class RingingAlarm : AppCompatActivity() {
             ringtones.getOrDefault(weatherInformation.getWeather("main"), R.raw.default_song)
         )
         mp.start()
+        mp.isLooping = true
 
         btnStopAlarm.setOnClickListener {
             mp.release()
             val backToMainActivity = Intent(this, MainActivity::class.java)
+            backToMainActivity.putExtra("alarmToDelete",ringingAlarm)
             backToMainActivity.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             startActivity(backToMainActivity)
         }
@@ -107,7 +109,6 @@ class RingingAlarm : AppCompatActivity() {
 
 //    val broadcastReceiver = object : BroadcastReceiver(){
 //        override fun onReceive(context: Context?, intent: Intent?) {
-//            println("I made it to here!!!")
 //            setContentView(R.layout.activity_ringing_alarm)
 //            ringAlarm()
 //        }

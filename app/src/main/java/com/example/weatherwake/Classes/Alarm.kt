@@ -3,6 +3,7 @@ package com.example.weatherwake.Classes
 /*Alarm Class. Is the Alarm object which holds all alarm information and allows alarm to be passed around */
 
 import java.io.Serializable //allows us to pass alarm objects between activities
+import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -55,6 +56,10 @@ class Alarm(
         return randomId
     }
 
+    fun timeInt():Int{
+        return alarmTimeInt(calendar)
+    }
+
     public fun getCalendar(): Calendar {
         return calendar
     }
@@ -76,6 +81,10 @@ class Alarm(
 
     public fun toggleAlarm() {
         active = !active
+    }
+
+    override fun toString(): String {
+        return "Alarm Date: "+getFormattedDate(calendar,true)+". Alarm Time "+getFormattedTime(calendar)+". Alarm timeInt: "+timeInt()
     }
 
     /*Private methods for formatting */
@@ -100,6 +109,22 @@ class Alarm(
         return timeFormatter.format(timeDate)
     }
 
+    //formula used to convert time to an Integer (i.e. 11:21 pm -> 2321). Allows time comparison without millis
+    private fun alarmTimeInt(calendar: Calendar): Int {
+        var num = calendar.get(Calendar.HOUR_OF_DAY)
+        var min = calendar.get(Calendar.MINUTE)
+
+        // puts numbers of minutes into Stack (40 -> Stack with 4,0 (4 on top))
+        val minutes = Stack<Int>()
+        while(min!=0){
+            minutes.push(min%10)
+            min/=10
+        }
+        while (!minutes.isEmpty()){
+            num = num*10+minutes.pop()
+        }
+        return num
+    }
 
 }
 

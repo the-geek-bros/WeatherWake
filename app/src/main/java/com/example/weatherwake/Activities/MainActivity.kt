@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isInvisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -17,6 +18,7 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weatherwake.APIs.WeatherAPI
 import com.example.weatherwake.Classes.Alarm
+import com.example.weatherwake.Classes.AlarmHandlers
 import com.example.weatherwake.Classes.Alarms_Adapter
 import com.example.weatherwake.Classes.Utilities
 import com.example.weatherwake.R
@@ -24,6 +26,7 @@ import com.example.weatherwake.Threads.SpinnerThread
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.app_bar_main.* //allows direct access to the element without findViewByID
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -35,7 +38,7 @@ class MainActivity : AppCompatActivity() {
     val st = Thread(SpinnerThread(this))
 
     //List of Alarms ... move to Fragment viewModel
-    val alarms_list: ArrayList<Alarm> = ArrayList()
+    val alarms_list: LinkedList<Alarm> = LinkedList()
 
 //    //For the alarm_recyclerView - testing
 //    private lateinit var alarms_recyclerView1: RecyclerView //the actual recyclerView
@@ -103,6 +106,10 @@ class MainActivity : AppCompatActivity() {
                 val newAlarm: Alarm = intent.extras?.get("newAlarm") as Alarm
                 addAlarmToRecyclerView(newAlarm)
             }
+            if(intent.hasExtra("alarmToDelete")){
+                val alarmToDelete:Alarm = intent.extras?.get("alarmToDelete") as Alarm
+                deleteAlarm(alarmToDelete)
+            }
         }
     }
 
@@ -143,8 +150,39 @@ class MainActivity : AppCompatActivity() {
     }
 
     public fun addAlarmToRecyclerView(newAlarm: Alarm) {
-        alarms_list.add(newAlarm)
-        alarms_recyclerView.adapter?.notifyItemInserted(alarms_list.size - 1);
+        if(alarms_list.isEmpty()){
+            textViewNoAlarms.isInvisible=true
+        }
+        var alarmOrderAdded = false
+        var locationAdded = alarms_list.size
+        for (x in 0 until alarms_list.size) {
+            if (newAlarm.timeInt() < alarms_list[x].timeInt()) {
+                alarms_list.add(x, newAlarm)
+                locationAdded = x
+                alarmOrderAdded = true
+                break
+            }
+        }
+        if (!alarmOrderAdded)
+            alarms_list.add(newAlarm)
+        alarms_recyclerView.adapter?.notifyItemInserted(locationAdded);
+    }
+
+    public fun deleteAlarm(alarmToDelete: Alarm) {
+        for (x in 0 until alarms_list.size) {
+            if (alarms_list[x].getAlarmId() == alarmToDelete.getAlarmId()) {
+                //remove intent of alarm
+                val alarmHandler = AlarmHandlers(this)
+                alarmHandler.cancelAlarmInAlarmManager(alarms_list[x])
+                //remove alarm from recyclerView
+                alarms_list.removeAt(x)
+                alarms_recyclerView.adapter?.notifyItemRemoved(x)
+                break
+            }
+        }
+        if(alarms_list.isEmpty()){
+            textViewNoAlarms.isInvisible = false
+        }
     }
 
 

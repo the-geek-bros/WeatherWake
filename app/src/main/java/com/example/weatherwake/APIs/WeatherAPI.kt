@@ -51,7 +51,7 @@ public class WeatherAPI : AsyncTask<Void, Void, String>() {
         return Double.MIN_VALUE
     }
 
-    //get main descriptions (main or description) Ex: Main: Cloudy, Description: Partially Cloudy
+    //get main descriptions (main or description) Ex: Main: Cloudy, Description: Partially Cloudy. Description: overcast clouds
     public fun getWeather(info: String): String {
         when (info) {
             "main" -> return current_main
@@ -60,7 +60,7 @@ public class WeatherAPI : AsyncTask<Void, Void, String>() {
         return ""
     }
 
-    //get wind (s for meters per second, m for metric kmh, i for imperial mph
+    //get wind (s for meters per second, m for metric kmh, i for imperial mph)
     public fun getWindSpeed(temp_system: Char): Double {
         when (temp_system) {
             's' -> return round(current_wind, 3)  //meters per sec
@@ -91,6 +91,7 @@ public class WeatherAPI : AsyncTask<Void, Void, String>() {
     //used to execute weather based on user location
     public fun executeWeather(lat: Double, lon: Double): Unit {
         locationExecuted = false
+
 
         loc.set(0, lat)
         loc.set(1, lon)
