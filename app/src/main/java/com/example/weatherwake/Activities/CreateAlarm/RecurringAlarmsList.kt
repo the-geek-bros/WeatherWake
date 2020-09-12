@@ -61,15 +61,10 @@ class RecurringAlarms : AppCompatActivity(), OnItemClickListenerDayOfWeek {
 }
 /*ADAPTER*/
 
-class DaysOfWeekAdapter(
-    context: Context,
-    var onItemClickListenerDayOfWeek: OnItemClickListenerDayOfWeek
-) : RecyclerView.Adapter<DaysOfWeek_ViewHolder>() {
+class DaysOfWeekAdapter(val context: Context, var onItemClickListenerDayOfWeek: OnItemClickListenerDayOfWeek): RecyclerView.Adapter<DaysOfWeek_ViewHolder>() {
     var daysOfWeek: Array<String>
-    var context: Context
 
     init {
-        this.context = context
         this.daysOfWeek = context.resources.getStringArray(R.array.daysOfWeek)
     }
 
@@ -85,7 +80,7 @@ class DaysOfWeekAdapter(
     }
 
     override fun onBindViewHolder(holder: DaysOfWeek_ViewHolder, position: Int) {
-        holder.initialize(daysOfWeek.get(position), onItemClickListenerDayOfWeek)
+        holder.initialize(daysOfWeek.get(position), onItemClickListenerDayOfWeek) //give each item an on click listener
     }
 }
 
@@ -96,6 +91,7 @@ class DaysOfWeek_ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         itemView.dayOfWeek.text = item
         itemView.checkmark.isInvisible = true
 
+        //onClick Listener of the item
         itemView.setOnClickListener { view ->
             action.onItemClick(item, adapterPosition)
             itemView.checkmark.isInvisible = !itemView.checkmark.isInvisible
@@ -107,6 +103,4 @@ class DaysOfWeek_ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 //interface for the OnClick function
 interface OnItemClickListenerDayOfWeek {
     fun onItemClick(item: String, position: Int)
-
-
 }

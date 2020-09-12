@@ -15,7 +15,9 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherwake.APIs.WeatherAPI
 import com.example.weatherwake.Classes.Alarm
 import com.example.weatherwake.Classes.AlarmHandlers
@@ -55,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         //button to go to the alarm page (might change later so it doesnt go to a new page)
-        val fab: FloatingActionButton = findViewById(R.id.new_alarm_button)
+        val fab: FloatingActionButton = findViewById(R.id.btnCreateNewAlarm)
         fab.setOnClickListener { view ->
             val toAlarmMaker: Intent = Intent(applicationContext, AlarmMaker::class.java)
             startActivity(toAlarmMaker)
@@ -67,6 +69,21 @@ class MainActivity : AppCompatActivity() {
 
         alarms_recyclerView.layoutManager = LinearLayoutManager(this)
         alarms_recyclerView.adapter = Alarms_Adapter(alarms_list)
+
+        //adding swiping to delete item
+        val itemTouchCallBack: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT){
+            override fun onMove(recyclerView: RecyclerView,viewHolder: RecyclerView.ViewHolder,target: RecyclerView.ViewHolder): Boolean {
+                TODO("Not yet implemented")
+            }
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val alarmPosition = viewHolder.adapterPosition
+                deleteAlarm(alarms_list[alarmPosition])
+            }
+
+        }
+        val itemTouchHelper:ItemTouchHelper = ItemTouchHelper(itemTouchCallBack)
+        itemTouchHelper.attachToRecyclerView(alarms_recyclerView)
+
 
 
         // Passing each menu ID as a set of Ids because each
@@ -149,6 +166,7 @@ class MainActivity : AppCompatActivity() {
         weatherInfo.executeWeather(locArray[0], locArray[1])
     }
 
+    //add alarm to the recyclerView. Alarms are sorted based on time
     public fun addAlarmToRecyclerView(newAlarm: Alarm) {
         if(alarms_list.isEmpty()){
             textViewNoAlarms.isInvisible=true
@@ -156,7 +174,7 @@ class MainActivity : AppCompatActivity() {
         var alarmOrderAdded = false
         var locationAdded = alarms_list.size
         for (x in 0 until alarms_list.size) {
-            if (newAlarm.timeInt() < alarms_list[x].timeInt()) {
+            if (newAlarm.earlier(alarms_list[x])) {
                 alarms_list.add(x, newAlarm)
                 locationAdded = x
                 alarmOrderAdded = true
@@ -168,12 +186,13 @@ class MainActivity : AppCompatActivity() {
         alarms_recyclerView.adapter?.notifyItemInserted(locationAdded);
     }
 
+    //removes alarm from RecyclerView and the AlarmManager
     public fun deleteAlarm(alarmToDelete: Alarm) {
+        //remove intent of alarm
+        val alarmHandler = AlarmHandlers(baseContext)
+        alarmHandler.cancelAlarmInAlarmManager(alarmToDelete)
         for (x in 0 until alarms_list.size) {
             if (alarms_list[x].getAlarmId() == alarmToDelete.getAlarmId()) {
-                //remove intent of alarm
-                val alarmHandler = AlarmHandlers(this)
-                alarmHandler.cancelAlarmInAlarmManager(alarms_list[x])
                 //remove alarm from recyclerView
                 alarms_list.removeAt(x)
                 alarms_recyclerView.adapter?.notifyItemRemoved(x)

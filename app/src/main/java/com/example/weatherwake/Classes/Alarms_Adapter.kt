@@ -5,6 +5,7 @@ package com.example.weatherwake.Classes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherwake.Activities.CreateAlarm.alarmCalendarView
 import com.example.weatherwake.R
@@ -47,6 +48,5 @@ class Alarms_Adapter(alarms_list: LinkedList<Alarm>) : RecyclerView.Adapter<Alar
 
 //ViewHolder Class
 class Alarm_ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-
 
 }

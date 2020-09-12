@@ -36,30 +36,28 @@ class HomeFragment : Fragment() {
     ): View? {
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_home, container, false)
+        val root = inflater.inflate(R.layout.fragment_home, container, false);
 
-        alarms_recyclerView = root.findViewById(R.id.alarms_recyclerView1)
-        fab = root.findViewById(R.id.new_alarm_button1)
-        fab.setOnClickListener { view ->
-            println("BUTTON HAS BEEN CLICKED")
-            val toAlarmMaker: Intent = Intent(activity?.applicationContext, AlarmMaker::class.java)
-            startActivity(toAlarmMaker)
-        }
+
+
 
         return root
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
-
     }
 
     override fun onStart() {
         super.onStart()
 
 
+    }
+
+    fun onClick() {
+        println("Button clicked")
+        val toAlarmMaker = Intent(activity?.applicationContext,AlarmMaker::class.java)
+        startActivity(toAlarmMaker)
     }
 
 

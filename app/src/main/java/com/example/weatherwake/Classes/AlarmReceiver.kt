@@ -11,9 +11,7 @@ import java.util.*
 
 
 class AlarmReceiver : BroadcastReceiver() {
-    var alarmToRing: Alarm = Alarm(Calendar.getInstance(),"Today","Hello There joe",
-        IntArray(0),1,123
-    )
+    lateinit var alarmToRing: Alarm
 
     //method called when the alarm is fired
     override fun onReceive(context: Context?, intent: Intent?) {

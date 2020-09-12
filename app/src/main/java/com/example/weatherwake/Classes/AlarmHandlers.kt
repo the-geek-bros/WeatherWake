@@ -12,28 +12,27 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.content.ContextCompat.startActivity
+import com.example.weatherwake.Activities.MainActivity
 import com.example.weatherwake.Activities.RingingAlarm
 import com.google.gson.Gson
 import java.time.DayOfWeek
 import java.util.*
 
-class AlarmHandlers(activity: Activity) {
-    var activity: Activity
-    val alarmManager: AlarmManager =
-        activity.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+class AlarmHandlers(val context: Context) {
+    val alarmManager: AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-    init {
-        this.activity = activity
-    }
 
     public fun addAlarmToAlarmManager(newAlarm: Alarm) {
-        val ringAlarmIntent = Intent(activity.applicationContext, AlarmReceiver::class.java)
+        val ringAlarmIntent = Intent(context.applicationContext, AlarmReceiver::class.java)
         ringAlarmIntent.setAction(Gson().toJson(newAlarm))
 
         val pendingIntent: PendingIntent = PendingIntent.getBroadcast(
-            activity.applicationContext,
+            context.applicationContext,
             newAlarm.getAlarmId(),
             ringAlarmIntent, Intent.FILL_IN_DATA)
+
+            //pending intent without the broadcast receiver
+//        val pendingIntent = PendingIntent.getActivity(context,newAlarm.getAlarmId(),ringAlarmIntent,0)
 
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
@@ -43,9 +42,9 @@ class AlarmHandlers(activity: Activity) {
     }
 
     public fun cancelAlarmInAlarmManager(alarmCancelling: Alarm) {
-        val ringAlarmIntent: Intent = Intent(activity.applicationContext, RingingAlarm::class.java)
+        val ringAlarmIntent: Intent = Intent(context.applicationContext, RingingAlarm::class.java)
         val pendingIntent: PendingIntent = PendingIntent.getBroadcast(
-            activity.applicationContext,
+            context.applicationContext,
             alarmCancelling.getAlarmId(),
             ringAlarmIntent,
             PendingIntent.FLAG_UPDATE_CURRENT

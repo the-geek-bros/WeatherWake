@@ -13,6 +13,7 @@ import com.example.weatherwake.APIs.WeatherAPI
 import com.example.weatherwake.Classes.Alarm
 import com.example.weatherwake.Classes.Utilities
 import com.example.weatherwake.R
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_ringing_alarm.*
 import java.lang.StringBuilder
 
@@ -56,6 +57,12 @@ class RingingAlarm : AppCompatActivity() {
         if (intent != null) {
             ringingAlarm = intent.extras?.get("newAlarmToRing") as Alarm
         }
+
+        //for getting alarm from AlarmHandlers when AlarmHandlers calls getActivity
+//        val alarmGSON = intent?.action
+//        if(alarmGSON!=null){
+//            ringingAlarm = Gson().fromJson(alarmGSON, Alarm::class.java)
+//        }
 
         ringAlarm()
     }

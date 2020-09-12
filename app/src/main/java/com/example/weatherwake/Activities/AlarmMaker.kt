@@ -58,7 +58,7 @@ class AlarmMaker : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         alarmTypesSpinner = findViewById(R.id.alarm_type_spinner)
 
         //alarm handler
-        alarmHandler = AlarmHandlers(this)
+        alarmHandler = AlarmHandlers(baseContext)
 
 
         /*Create all of the listeners */
@@ -171,7 +171,7 @@ class AlarmMaker : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     //Creates alarm object and adds alarm to recycler view and to alarm manager
     private fun createNewAlarm() {
-        val randomId:Int = UUID.randomUUID().hashCode()
+        val randomId:Int = alarmChosenCalendar.timeInMillis.toInt()
         alarmChosenCalendar.set(Calendar.SECOND, 0)
         val newAlarm = Alarm(
             alarmChosenCalendar,

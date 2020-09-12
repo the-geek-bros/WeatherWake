@@ -56,9 +56,15 @@ class Alarm(
         return randomId
     }
 
-    fun timeInt():Int{
-        return alarmTimeInt(calendar)
-    }
+    //compare the times of two different alarms
+   fun earlier(comparingAlarm: Alarm): Boolean{
+       if(calendar.get(Calendar.HOUR_OF_DAY)==comparingAlarm.getCalendar().get(Calendar.HOUR_OF_DAY)){
+           return calendar.get(Calendar.MINUTE) < comparingAlarm.getCalendar().get(Calendar.MINUTE)
+       }
+       else{
+           return calendar.get(Calendar.HOUR_OF_DAY)< comparingAlarm.getCalendar().get(Calendar.HOUR_OF_DAY)
+       }
+   }
 
     public fun getCalendar(): Calendar {
         return calendar
@@ -84,7 +90,7 @@ class Alarm(
     }
 
     override fun toString(): String {
-        return "Alarm Date: "+getFormattedDate(calendar,true)+". Alarm Time "+getFormattedTime(calendar)+". Alarm timeInt: "+timeInt()
+        return "Alarm Date: " + getFormattedDate(calendar, true) + ". Alarm Time " + getFormattedTime(calendar)
     }
 
     /*Private methods for formatting */
@@ -108,23 +114,5 @@ class Alarm(
         val timeFormatter = SimpleDateFormat("h:mm a", Locale.US)
         return timeFormatter.format(timeDate)
     }
-
-    //formula used to convert time to an Integer (i.e. 11:21 pm -> 2321). Allows time comparison without millis
-    private fun alarmTimeInt(calendar: Calendar): Int {
-        var num = calendar.get(Calendar.HOUR_OF_DAY)
-        var min = calendar.get(Calendar.MINUTE)
-
-        // puts numbers of minutes into Stack (40 -> Stack with 4,0 (4 on top))
-        val minutes = Stack<Int>()
-        while(min!=0){
-            minutes.push(min%10)
-            min/=10
-        }
-        while (!minutes.isEmpty()){
-            num = num*10+minutes.pop()
-        }
-        return num
-    }
-
 }
 
