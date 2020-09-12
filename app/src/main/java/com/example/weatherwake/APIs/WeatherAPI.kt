@@ -13,8 +13,9 @@ import java.sql.Time
 import java.util.concurrent.TimeUnit
 import kotlin.collections.HashMap
 
-lateinit var loc: DoubleArray
+
 private var locationExecuted: Boolean = false
+val loc: DoubleArray = DoubleArray(2)
 
 //data that will be collected
 ////for current weather
@@ -33,9 +34,8 @@ private var current_wind: Double = Double.MIN_VALUE
 private var current_city: String = "----"
 
 public class WeatherAPI : AsyncTask<Void, Void, String>() {
-    init {
-        loc = DoubleArray(2)
-    }
+
+
 ////////////////////////////////////////////////////////////
     /*Returns data functions*/
 
@@ -159,8 +159,8 @@ public class WeatherAPI : AsyncTask<Void, Void, String>() {
 
     //round values
     private fun round(value: Double, after_dot: Int): Double {
-        val int_form: Int = (value * (Math.pow(10.0,after_dot.toDouble()))).toInt()
-        return (int_form / Math.pow(10.0,after_dot.toDouble()))
+        val int_form: Int = (value * (Math.pow(10.0, after_dot.toDouble()))).toInt()
+        return (int_form / Math.pow(10.0, after_dot.toDouble()))
     }
 
 
