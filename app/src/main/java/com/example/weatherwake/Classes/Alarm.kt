@@ -3,7 +3,6 @@ package com.example.weatherwake.Classes
 /*Alarm Class. Is the Alarm object which holds all alarm information and allows alarm to be passed around */
 
 import java.io.Serializable //allows us to pass alarm objects between activities
-import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -40,7 +39,7 @@ class Alarm(
     }
 
     public fun getAlarmDate(): String {
-        return getFormattedDate(calendar, false)
+        return getFormattedDate(calendar)
     }
 
     //returns whether info about whether alarm is today, tomorrow, days of week, or calendar
@@ -56,18 +55,18 @@ class Alarm(
         return randomId
     }
 
-    //compare the times of two different alarms
-   fun earlier(comparingAlarm: Alarm): Boolean{
-       if(calendar.get(Calendar.HOUR_OF_DAY)==comparingAlarm.getCalendar().get(Calendar.HOUR_OF_DAY)){
-           return calendar.get(Calendar.MINUTE) < comparingAlarm.getCalendar().get(Calendar.MINUTE)
-       }
-       else{
-           return calendar.get(Calendar.HOUR_OF_DAY)< comparingAlarm.getCalendar().get(Calendar.HOUR_OF_DAY)
-       }
-   }
+    //Returns whether one alarm is later than another
+    fun earlier(comparingAlarm: Alarm): Boolean {
+        return comparingAlarm.calendar.timeInMillis < this.calendar.timeInMillis
+    }
 
-    public fun getCalendar(): Calendar {
-        return calendar
+    fun later(comparingAlarm: Alarm): Boolean {
+        return comparingAlarm.calendar.timeInMillis > this.calendar.timeInMillis
+    }
+
+
+    fun getCalendar(): Calendar {
+        return this.calendar
     }
 
     public fun setAlarmTime(hourOfDay: Int, minute: Int) {
@@ -76,9 +75,9 @@ class Alarm(
     }
 
     public fun setAlarmDateInfo(month: Int, date: Int, year: Int) {
-        calendar.set(Calendar.MONTH, month)
-        calendar.set(Calendar.DATE, date)
-        calendar.set(Calendar.YEAR, year)
+        this.calendar.set(Calendar.MONTH, month)
+        this.calendar.set(Calendar.DATE, date)
+        this.calendar.set(Calendar.YEAR, year)
     }
 
     public fun setAlarmDescription(newDescription: String) {
@@ -90,21 +89,15 @@ class Alarm(
     }
 
     override fun toString(): String {
-        return "Alarm Date: " + getFormattedDate(calendar, true) + ". Alarm Time " + getFormattedTime(calendar)
+        return "Alarm Date: " + getFormattedDate(calendar) + ". Alarm Time " + getFormattedTime(
+            calendar
+        )
     }
 
     /*Private methods for formatting */
-    private fun getFormattedDate(calendar: Calendar, includeDayOfWeek: Boolean): String {
-        val day = calendar.get(Calendar.DAY_OF_MONTH).toString()
-        val month = (calendar.get(Calendar.MONTH) + 1).toString()
-        val year = calendar.get(Calendar.YEAR).toString()
-        if (includeDayOfWeek) {
-            val dayOfWeek: String? =
-                calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.US)
-            return dayOfWeek + " " + month + "/" + day + "/" + year
-        } else {
-            return month + "/" + day + "/" + year
-        }
+    private fun getFormattedDate(calendar: Calendar): String {
+        val timeDate = Date(calendar.timeInMillis)
+        return SimpleDateFormat("E m/d/yyyy", Locale.US).format(timeDate)
 
     }
 

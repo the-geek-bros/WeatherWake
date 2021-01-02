@@ -148,15 +148,6 @@ class MainActivity : AppCompatActivity() {
 
     //*******OTHER METHODS **///
 
-    public fun titleCase(s: String): String {
-        val listArr: List<String> = s.split(" ")
-        for (word in listArr) {
-            word[0].toUpperCase()
-        }
-        val newString: String = listArr.joinToString(" ")
-        return newString
-    }
-
     //update the weather and the weather information
     public fun updateWeather(): Unit {
 //        val locArray: DoubleArray = getLastLocation()
@@ -167,23 +158,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     //add alarm to the recyclerView. Alarms are sorted based on time
-    public fun addAlarmToRecyclerView(newAlarm: Alarm) {
-        if(alarms_list.isEmpty()){
+    fun addAlarmToRecyclerView(newAlarm: Alarm) {
+        if(alarms_list.isEmpty())
             textViewNoAlarms.isInvisible=true
+
+        var locationToAddAlarm:Int = 0
+        while (locationToAddAlarm<alarms_list.size && newAlarm.earlier(alarms_list[locationToAddAlarm])){
+            locationToAddAlarm++
         }
-        var alarmOrderAdded = false
-        var locationAdded = alarms_list.size
-        for (x in 0 until alarms_list.size) {
-            if (newAlarm.earlier(alarms_list[x])) {
-                alarms_list.add(x, newAlarm)
-                locationAdded = x
-                alarmOrderAdded = true
-                break
-            }
-        }
-        if (!alarmOrderAdded)
+
+        if(locationToAddAlarm==alarms_list.size)
             alarms_list.add(newAlarm)
-        alarms_recyclerView.adapter?.notifyItemInserted(locationAdded);
+        else
+            alarms_list.add(locationToAddAlarm,newAlarm)
+
+        alarms_recyclerView.adapter?.notifyItemInserted(locationToAddAlarm);
     }
 
     //removes alarm from RecyclerView and the AlarmManager
